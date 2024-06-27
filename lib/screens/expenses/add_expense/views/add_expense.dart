@@ -28,10 +28,13 @@ class _AddExpenseState extends State<AddExpense> {
   @override
   void initState() {
     dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
-    expense = Expense.empty;
-    expense.category = ExpCategory.empty;
+    // expense = Expense.empty;
+    // expense.category = ExpCategory.empty;
+    // super.initState();
+    // expense.expenseId = const Uuid().v1();
     super.initState();
-    expense.expenseId = const Uuid().v1();
+    dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    expense = Expense.empty(const Uuid().v1());
   }
 
   @override
@@ -151,7 +154,11 @@ class _AddExpenseState extends State<AddExpense> {
                                 child: ListTile(
                                   onTap: () {
                                     setState(() {
-                                      expense.category = state.categories[i];
+                                      // expense.category = state.categories[i];
+                                      expense = expense.copyWith(
+                                        category: state.categories[i],
+                                      );
+                          
                                       categoryController.text =
                                           expense.category.name;
                                     });
@@ -188,7 +195,8 @@ class _AddExpenseState extends State<AddExpense> {
                             setState(() {
                               dateController.text =
                                   DateFormat('dd/MM/yyyy').format(newDate);
-                              expense.date = newDate;
+                              // expense.date = newDate;
+                              expense.copyWith(date: newDate);
                             });
                           }
                         },
@@ -218,10 +226,15 @@ class _AddExpenseState extends State<AddExpense> {
                             : TextButton(
                                 onPressed: () {
                                   setState(() {
-                                    expense.userId =
-                                        FirebaseAuth.instance.currentUser!.uid;
-                                    expense.amount =
-                                        int.parse(expenseController.text);
+                                    // expense.userId =
+                                    //     FirebaseAuth.instance.currentUser!.uid;
+                                    // expense.amount =
+                                    //     int.parse(expenseController.text);
+                                    expense = expense.copyWith(
+                                        userId: FirebaseAuth
+                                            .instance.currentUser!.uid,
+                                        amount:
+                                            int.parse(expenseController.text));
                                     context
                                         .read<CreateExpenseBloc>()
                                         .add(CreateExpense(expense));

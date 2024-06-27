@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'dart:developer' as devtools show log;
 import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<GetExpensesBloc, GetExpensesState>(
       builder: (context, state) {
-        if (state is GetExpensesSuccess) {
+        if (state.status == ExpensesOverviewStatus.success) {
           return Scaffold(
             bottomNavigationBar: ClipRRect(
               borderRadius:
@@ -65,6 +65,14 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                 FloatingActionButtonLocation.centerDocked,
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
+                // print('Hello');
+                // print(state.expenses);
+
+                var cache = [];
+                for (final expense in state.expenses) {
+                  cache.add(expense.copyWith());
+                }
+                devtools.log('1. cache: $cache');
                 var newExpense = await Navigator.push(
                   context,
                   MaterialPageRoute<Expense?>(
@@ -88,10 +96,11 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                     ),
                   ),
                 );
+              
                 if (newExpense != null) {
                   setState(() {
+                    devtools.log('2. cache: $cache');
                     state.expenses.insert(0, newExpense);
-                    print(state.expenses);
                   });
                 }
               },
@@ -116,7 +125,7 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                 ? ExpenseMainScreen(state.expenses)
                 : const StatScreen(),
           );
-        } else if (state is GetExpensesLoading) {
+        } else if (state.status == ExpensesOverviewStatus.loading) {
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),

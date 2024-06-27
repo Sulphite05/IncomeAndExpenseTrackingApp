@@ -22,13 +22,13 @@ Future getCategoryCreation(BuildContext context) {
       context: context,
       builder: (ctx) {
         bool isExpended = false;
-        String iconSelected = '';
+        String iconSelected = 'more';
         Color categoryColor = const Color.fromARGB(255, 207, 112, 144);
         TextEditingController categoryNameController = TextEditingController();
         TextEditingController categoryIconController = TextEditingController();
         TextEditingController categoryColorController = TextEditingController();
         bool isLoading = false;
-        ExpCategory category = ExpCategory.empty;
+        ExpCategory category = ExpCategory.empty('');
 
         return BlocProvider.value(
           value: context.read<CreateCategoryBloc>(),
@@ -217,15 +217,25 @@ Future getCategoryCreation(BuildContext context) {
                               : TextButton(
                                   onPressed: () {
                                     // Create category object and pop
+                                    // setState(() {
+                                    //   category.userId = FirebaseAuth
+                                    //       .instance.currentUser!.uid;
+                                    //   category.categoryId = const Uuid()
+                                    //       .v1(); // algos to generate your id
+                                    //   category.name =
+                                    //       categoryNameController.text;
+                                    //   category.icon = iconSelected;
+                                    //   category.color = categoryColor.value;
+                                    // });
                                     setState(() {
-                                      category.userId = FirebaseAuth
-                                          .instance.currentUser!.uid;
-                                      category.categoryId = const Uuid()
-                                          .v1(); // algos to generate your id
-                                      category.name =
-                                          categoryNameController.text;
-                                      category.icon = iconSelected;
-                                      category.color = categoryColor.value;
+                                      category = ExpCategory(
+                                          totalExpenses: 0,
+                                          userId: FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                          categoryId: const Uuid().v1(),
+                                          name: categoryNameController.text,
+                                          icon: iconSelected,
+                                          color: categoryColor.value);
                                     });
 
                                     context

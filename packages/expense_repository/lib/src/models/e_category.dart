@@ -1,14 +1,14 @@
 import '../entities/entities.dart';
 
 class ExpCategory {
-  String categoryId;
-  String userId; // Add userId field
-  String name;
-  int totalExpenses;
-  String icon;
-  int color;
+   final String categoryId;
+   final String userId; // Add userId field
+   final String name;
+   final int totalExpenses;
+   final String icon;
+   final int color;
 
-  ExpCategory({
+  const ExpCategory({
     required this.categoryId,
     required this.userId, // Add userId to the constructor
     required this.name,
@@ -17,14 +17,12 @@ class ExpCategory {
     required this.color,
   });
 
-  static final empty = ExpCategory(
-    categoryId: '',
-    userId: '',
-    name: '',
-    totalExpenses: 0,
-    icon: '',
-    color: 0,
-  );
+  ExpCategory.empty(this.categoryId):
+    userId = '',
+    name = 'Misc',
+    totalExpenses = 0,
+    icon = 'more',
+    color = 0xFFC07090;
 
   ExpCategoryEntity toEntity() {
     return ExpCategoryEntity(
@@ -45,6 +43,24 @@ class ExpCategory {
       totalExpenses: entity.totalExpenses,
       icon: entity.icon,
       color: entity.color,
+    );
+  }
+
+  ExpCategory copyWith({
+    String? categoryId,
+    String? userId,
+    String? name,
+    int? totalExpenses,
+    String? icon,
+    int? color,
+  }) {
+    return ExpCategory(
+      categoryId: categoryId ?? this.categoryId,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      totalExpenses: totalExpenses ?? this.totalExpenses,
+      icon: icon ?? this.icon,
+      color: color ?? this.color
     );
   }
 }
