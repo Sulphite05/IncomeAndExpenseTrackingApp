@@ -17,13 +17,14 @@ Future getCategoryCreation(BuildContext context) {
     'shopping',
     'tech',
     'travel',
+    'more',
   ];
   return showDialog(
       context: context,
       builder: (ctx) {
         bool isExpended = false;
-        String iconSelected = 'more';
-        Color categoryColor = const Color.fromARGB(255, 207, 112, 144);
+        String iconSelected = '';
+        Color categoryColor = Colors.pink;
         TextEditingController categoryNameController = TextEditingController();
         TextEditingController categoryIconController = TextEditingController();
         TextEditingController categoryColorController = TextEditingController();

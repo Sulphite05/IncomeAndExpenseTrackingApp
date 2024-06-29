@@ -1,3 +1,4 @@
+import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -11,5 +12,5 @@ void main() async {
   await Firebase.initializeApp();
   Bloc.observer = SimpleBlocObserver();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(MyApp(FirebaseUserRepository()));
+  runApp(MyApp(FirebaseUserRepository(), FirebaseExpenseRepo()));
 }

@@ -101,10 +101,10 @@ class _AddExpenseState extends State<AddExpense> {
                         decoration: InputDecoration(
                           hintText: 'Category',
                           filled: true,
-                          fillColor: expense.category == ExpCategory.empty
+                          fillColor: expense.category.color == 0
                               ? Colors.white
                               : Color(expense.category.color),
-                          prefixIcon: expense.category == ExpCategory.empty
+                          prefixIcon: expense.category.icon == ''
                               ? const Icon(
                                   FontAwesomeIcons.list,
                                   size: 16,
@@ -158,7 +158,7 @@ class _AddExpenseState extends State<AddExpense> {
                                       expense = expense.copyWith(
                                         category: state.categories[i],
                                       );
-                          
+
                                       categoryController.text =
                                           expense.category.name;
                                     });
@@ -224,22 +224,22 @@ class _AddExpenseState extends State<AddExpense> {
                         child: isLoading
                             ? const Center(child: CircularProgressIndicator())
                             : TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    // expense.userId =
-                                    //     FirebaseAuth.instance.currentUser!.uid;
-                                    // expense.amount =
-                                    //     int.parse(expenseController.text);
-                                    expense = expense.copyWith(
-                                        userId: FirebaseAuth
-                                            .instance.currentUser!.uid,
-                                        amount:
-                                            int.parse(expenseController.text));
-                                    context
-                                        .read<CreateExpenseBloc>()
-                                        .add(CreateExpense(expense));
-                                  });
-                                },
+                                onPressed: expense.category.name == '' ||
+                                        expenseController.text == ''
+                                    ? null
+                                    : () {
+                                        setState(() {
+                                          expense = expense.copyWith(
+                                              userId: FirebaseAuth
+                                                  .instance.currentUser!.uid,
+                                              amount: int.parse(
+                                                  expenseController.text),
+                                              );
+                                          context
+                                              .read<CreateExpenseBloc>()
+                                              .add(CreateExpense(expense));
+                                        });
+                                      },
                                 style: TextButton.styleFrom(
                                     backgroundColor: Colors.black,
                                     shape: RoundedRectangleBorder(

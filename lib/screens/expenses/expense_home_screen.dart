@@ -80,16 +80,25 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                       providers: [
                         BlocProvider(
                           create: (context) =>
-                              CreateCategoryBloc(FirebaseExpenseRepo()),
+                              CreateCategoryBloc(expenseRepository: 
+                                context
+                                  .read<GetExpensesBloc>()
+                                  .expenseRepository),
                         ),
                         BlocProvider(
                           create: (context) =>
-                              GetCategoriesBloc(FirebaseExpenseRepo())
+                              GetCategoriesBloc(
+                              expenseRepository: context
+                                  .read<GetExpensesBloc>()
+                                  .expenseRepository)
                                 ..add(GetCategories()),
                         ),
                         BlocProvider(
                           create: (context) =>
-                              CreateExpenseBloc(FirebaseExpenseRepo()),
+                              CreateExpenseBloc(
+                              expenseRepository: context
+                                  .read<GetExpensesBloc>()
+                                  .expenseRepository),
                         ),
                       ],
                       child: const AddExpense(),

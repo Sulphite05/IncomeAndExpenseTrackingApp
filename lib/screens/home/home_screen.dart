@@ -243,7 +243,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           MaterialPageRoute(
                             builder: (context) => BlocProvider(
                               create: (context) => GetExpensesBloc(
-                                  expenseRepository: FirebaseExpenseRepo())
+                                  expenseRepository: context
+                                      .read<GetExpensesBloc>()
+                                      .expenseRepository)
                                 ..add(GetExpenses()),
                               child: const ExpenseHomeScreen(),
                             ),

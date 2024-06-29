@@ -9,7 +9,7 @@ class CreateCategoryBloc
     extends Bloc<CreateCategoryEvent, CreateCategoryState> {
   final ExpenseRepository expenseRepository;
 
-  CreateCategoryBloc(this.expenseRepository) : super(CreateCategoryInitial()) {
+  CreateCategoryBloc({required this.expenseRepository}) : super(CreateCategoryInitial()) {
     on<CreateCategory>((event, emit) async {
       emit(CreateCategoryLoading());
       try {

@@ -19,10 +19,10 @@ class ExpCategory {
 
   ExpCategory.empty(this.categoryId):
     userId = '',
-    name = 'Misc',
+    name = '',
     totalExpenses = 0,
-    icon = 'more',
-    color = 0xFFC07090;
+    icon = '',
+    color = 0;
 
   ExpCategoryEntity toEntity() {
     return ExpCategoryEntity(

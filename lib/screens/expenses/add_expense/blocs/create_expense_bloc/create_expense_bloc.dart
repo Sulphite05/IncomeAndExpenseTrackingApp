@@ -8,7 +8,7 @@ part 'create_expense_state.dart';
 class CreateExpenseBloc extends Bloc<CreateExpenseEvent, CreateExpenseState> {
   ExpenseRepository expenseRepository;
 
-  CreateExpenseBloc(this.expenseRepository) : super(CreateExpenseInitial()) {  
+  CreateExpenseBloc({required this.expenseRepository}) : super(CreateExpenseInitial()) {  
     on<CreateExpense>((event, emit) async {
       emit(CreateExpenseLoading());
       try{
