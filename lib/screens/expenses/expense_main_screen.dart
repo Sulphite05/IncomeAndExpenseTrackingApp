@@ -3,12 +3,11 @@ import 'dart:math';
 import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class ExpenseMainScreen extends StatelessWidget {
-  final List<Expense> expenses;
+  final List<ExpCategory> categories;
 
-  const ExpenseMainScreen(this.expenses, {super.key});
+  const ExpenseMainScreen(this.categories, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -252,12 +251,16 @@ class ExpenseMainScreen extends StatelessWidget {
             ),
             Expanded(
                 child: ListView.builder(
-              itemCount: expenses.length,
+              itemCount: categories.length,
               itemBuilder: (context, index) {
-                final expense = expenses[index];
+                final category = categories[index];
+                // final category = context
+                //     .read<GetExpensesBloc>()
+                //     .expenseRepository
+                //     .getCategories(categoryId: expenses[index].categoryId);
 
                 return Padding(
-                  key: ValueKey(expense.expenseId),
+                  key: ValueKey(category.categoryId),
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: Container(
                     decoration: BoxDecoration(
@@ -278,12 +281,12 @@ class ExpenseMainScreen extends StatelessWidget {
                                     width: 50,
                                     height: 50,
                                     decoration: BoxDecoration(
-                                      color: Color(expense.category.color),
+                                      color: Color(category.color),
                                       shape: BoxShape.circle,
                                     ),
                                   ),
                                   Image.asset(
-                                    'assets/${expense.category.icon}.png',
+                                    'assets/${category.icon}.png',
                                     scale: 2,
                                     color: Colors.white,
                                   ),
@@ -293,7 +296,7 @@ class ExpenseMainScreen extends StatelessWidget {
                                 width: 12.0,
                               ),
                               Text(
-                                expense.category.name,
+                                category.name,
                                 style: TextStyle(
                                   fontSize: 14,
                                   color:
@@ -307,7 +310,7 @@ class ExpenseMainScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                '\$${expense.amount}.00',
+                                '\$${category.totalExpenses}.00',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color:
@@ -315,14 +318,14 @@ class ExpenseMainScreen extends StatelessWidget {
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              Text(
-                                DateFormat('dd/MM/yyyy').format(expense.date),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Theme.of(context).colorScheme.outline,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
+                              // Text(
+                              //   DateFormat('dd/MM/yyyy').format(expense.date),
+                              //   style: TextStyle(
+                              //     fontSize: 14,
+                              //     color: Theme.of(context).colorScheme.outline,
+                              //     fontWeight: FontWeight.w400,
+                              //   ),
+                              // ),
                             ],
                           )
                         ],

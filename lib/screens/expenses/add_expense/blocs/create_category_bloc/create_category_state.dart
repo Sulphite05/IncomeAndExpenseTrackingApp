@@ -9,7 +9,14 @@ sealed class CreateCategoryState extends Equatable {
 
 final class CreateCategoryInitial extends CreateCategoryState {}
 
-final class CreateCategoryFailure extends CreateCategoryState {}
+final class CreateCategoryFailure extends CreateCategoryState {
+  final String error;
+
+  const CreateCategoryFailure(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
 
 final class CreateCategoryLoading extends CreateCategoryState {}
 

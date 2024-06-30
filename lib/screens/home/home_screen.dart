@@ -1,15 +1,15 @@
-import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_categories_bloc/bloc/get_categories_bloc.dart';
 import 'package:smart_ghr_wali/screens/expenses/expense_home_screen.dart';
 
 import '../../blocs/my_user_bloc/my_user_bloc.dart';
 import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
 import '../../blocs/update_user_info_bloc/update_user_info_bloc.dart';
-import '../expenses/blocs/get_expenses_bloc/get_expenses_bloc.dart';
+import '../expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -242,11 +242,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => BlocProvider(
-                              create: (context) => GetExpensesBloc(
+                              create: (context) => GetCategoriesBloc(
                                   expenseRepository: context
                                       .read<GetExpensesBloc>()
                                       .expenseRepository)
-                                ..add(GetExpenses()),
+                                ..add(GetCategories()),
                               child: const ExpenseHomeScreen(),
                             ),
                           ),

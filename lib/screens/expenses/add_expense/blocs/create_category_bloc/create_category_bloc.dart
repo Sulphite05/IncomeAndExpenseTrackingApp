@@ -16,7 +16,7 @@ class CreateCategoryBloc
         await expenseRepository.createCategory(event.category);
         emit(CreateCategorySuccess());
       } catch (e) {
-        emit(CreateCategoryFailure());
+        emit(CreateCategoryFailure(e.toString()));
       }
     });
   }

@@ -6,17 +6,30 @@ part 'get_categories_event.dart';
 part 'get_categories_state.dart';
 
 class GetCategoriesBloc extends Bloc<GetCategoriesEvent, GetCategoriesState> {
-  ExpenseRepository expenseRepository;
+  GetCategoriesBloc({required this.expenseRepository})
+      : super(const GetCategoriesState()) {
+    on<GetCategories>(_onGetCategories);
+  }
 
-  GetCategoriesBloc({required this.expenseRepository}) : super(GetCategoriesInitial()) {
-    on<GetCategories>((event, emit) async {
-      emit(GetCategoriesLoading());
-      try {
-        List<ExpCategory> categories = await expenseRepository.getCategory();
-        emit(GetCategoriesSuccess(categories));
-      } catch (e) {
-        emit(GetCategoriesFailure());
-      }
-    });
+  final ExpenseRepository expenseRepository;
+
+  Future<void> _onGetCategories(
+    GetCategories event,
+    Emitter<GetCategoriesState> emit,
+  ) async {
+    emit(state.copyWith(status: () => CategoriesOverviewStatus.loading));
+
+    await emit.forEach<List<ExpCategory>>(
+      expenseRepository.getCategories(),
+      onData: (categories) => state.copyWith(
+        status: () => CategoriesOverviewStatus.success,
+        categories: () => categories,
+      ),
+      onError: (_, __) => state.copyWith(
+        status: () => CategoriesOverviewStatus.failure,
+      ),
+    );
   }
 }
+
+

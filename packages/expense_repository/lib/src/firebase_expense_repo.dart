@@ -11,28 +11,69 @@ class FirebaseExpenseRepo implements ExpenseRepository {
   @override
   Future<void> createCategory(ExpCategory category) async {
     try {
+      // Check for existing categories with the same name, icon, or color
+      final querySnapshot = await categoryCollection
+          .where('name', isEqualTo: category.name)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        throw Exception('A category with the same name already exists.');
+      }
+
+      if (category.name == '') {
+        throw Exception('Please enter a category name.');
+      }
+
+      if (category.icon == '') {
+        throw Exception('Please select an icon.');
+      }
+
+      // If no existing category matches, proceed to create the new category
       await categoryCollection
           .doc(category.categoryId)
-          .set(category.toEntity().toDocument()); // Pass userId to toDocument
+          .set(category.toEntity().toDocument());
     } catch (e) {
       log(e.toString());
       rethrow;
     }
   }
 
-  @override
-  Future<List<ExpCategory>> getCategory() async {
-    try {
-      String userId =
-          FirebaseAuth.instance.currentUser!.uid; // Get current user's userId
+  // @override
+  // Future<List<ExpCategory>> getCategories() async {
+  //   try {
+  //     String userId =
+  //         FirebaseAuth.instance.currentUser!.uid; // Get current user's userId
 
-      return categoryCollection
-          .where('userId', isEqualTo: userId) // Filter by userId
-          .get()
-          .then((value) => value.docs
-              .map((e) => ExpCategory.fromEntity(
-                  ExpCategoryEntity.fromDocument(e.data())))
-              .toList());
+  //     return categoryCollection
+  //         .where('userId', isEqualTo: userId) // Filter by userId
+  //         .get()
+  //         .then((value) => value.docs
+  //             .map((e) => ExpCategory.fromEntity(
+  //                 ExpCategoryEntity.fromDocument(e.data())))
+  //             .toList());
+  //   } catch (e) {
+  //     log(e.toString());
+  //     rethrow;
+  //   }
+  // }
+
+  @override
+  Stream<List<ExpCategory>> getCategories(
+      {String? userId, String? categoryId}) async* {
+    try {
+      Query query = categoryCollection;
+
+      if (userId != null) {
+        query = query.where('userId', isEqualTo: userId);
+      }
+
+      if (categoryId != null) {
+        query = query.where('categoryId', isEqualTo: categoryId);
+      }
+      yield await query.get().then((value) => value.docs
+          .map((e) => ExpCategory.fromEntity(
+              ExpCategoryEntity.fromDocument(e.data() as Map<String, dynamic>)))
+          .toList());
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -61,11 +102,17 @@ class FirebaseExpenseRepo implements ExpenseRepository {
     }
   }
 
-
-
   @override
   Future<void> createExpense(Expense expense) async {
     try {
+      if (expense.categoryId == '') {
+        throw Exception('Please select a category.');
+      }
+
+      if (expense.amount <= 0) {
+        throw Exception('Please enter a valid amount.');
+      }
+
       await expenseCollection
           .doc(expense.expenseId)
           .set(expense.toEntity().toDocument()); // Pass userId to toDocument
@@ -94,7 +141,6 @@ class FirebaseExpenseRepo implements ExpenseRepository {
     }
   }
 
-  
   // @override
   // Future<List<Expense>> getExpenses() async {
   //   try {
@@ -117,7 +163,7 @@ class FirebaseExpenseRepo implements ExpenseRepository {
   @override
   Future<void> updateExpense(Expense expense) async {
     try {
-      await categoryCollection
+      await expenseCollection
           .doc(expense.expenseId)
           .update(expense.toEntity().toDocument());
     } catch (e) {

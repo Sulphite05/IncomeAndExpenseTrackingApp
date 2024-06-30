@@ -1,23 +1,29 @@
 part of 'get_categories_bloc.dart';
 
-sealed class GetCategoriesState extends Equatable {
-  const GetCategoriesState();
+enum CategoriesOverviewStatus { initial, loading, success, failure }
 
-  @override
-  List<Object> get props => [];
-}
+class GetCategoriesState extends Equatable {
+  const GetCategoriesState({
+    this.status = CategoriesOverviewStatus.initial,
+    this.categories = const [],
+  });
 
-final class GetCategoriesInitial extends GetCategoriesState {}
-
-final class GetCategoriesFailure extends GetCategoriesState {}
-
-final class GetCategoriesLoading extends GetCategoriesState {}
-
-final class GetCategoriesSuccess extends GetCategoriesState {
+  final CategoriesOverviewStatus status;
   final List<ExpCategory> categories;
 
-  const GetCategoriesSuccess(this.categories);
+  GetCategoriesState copyWith({
+    CategoriesOverviewStatus Function()? status,
+    List<ExpCategory> Function()? categories,
+  }) {
+    return GetCategoriesState(
+      status: status != null ? status() : this.status,
+      categories: categories != null ? categories() : this.categories,
+    );
+  }
 
   @override
-  List<Object> get props => [categories];
+  List<Object?> get props => [
+        status,
+        categories,
+      ];
 }

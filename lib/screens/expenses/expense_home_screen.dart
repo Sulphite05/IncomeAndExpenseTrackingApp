@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'dart:developer' as devtools show log;
+// import 'dart:developer' as devtools show log;
 import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'add_expense/blocs/create_category_bloc/create_category_bloc.dart';
 import 'add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
 import 'add_expense/blocs/get_categories_bloc/bloc/get_categories_bloc.dart';
 import 'add_expense/views/add_expense.dart';
-import 'blocs/get_expenses_bloc/get_expenses_bloc.dart';
+import 'add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 import 'expense_main_screen.dart';
 
 class ExpenseHomeScreen extends StatefulWidget {
@@ -26,9 +26,9 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetExpensesBloc, GetExpensesState>(
+    return BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
       builder: (context, state) {
-        if (state.status == ExpensesOverviewStatus.success) {
+        if (state.status == CategoriesOverviewStatus.success) {
           return Scaffold(
             bottomNavigationBar: ClipRRect(
               borderRadius:
@@ -65,37 +65,26 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                 FloatingActionButtonLocation.centerDocked,
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
-                // print('Hello');
-                // print(state.expenses);
-
-                var cache = [];
-                for (final expense in state.expenses) {
-                  cache.add(expense.copyWith());
-                }
-                devtools.log('1. cache: $cache');
-                var newExpense = await Navigator.push(
+                var category = await Navigator.push(
                   context,
-                  MaterialPageRoute<Expense?>(
+                  MaterialPageRoute<ExpCategory?>(
                     builder: (BuildContext context) => MultiBlocProvider(
                       providers: [
                         BlocProvider(
-                          create: (context) =>
-                              CreateCategoryBloc(expenseRepository: 
-                                context
+                          create: (context) => CreateCategoryBloc(
+                              expenseRepository: context
                                   .read<GetExpensesBloc>()
                                   .expenseRepository),
                         ),
                         BlocProvider(
-                          create: (context) =>
-                              GetCategoriesBloc(
+                          create: (context) => GetCategoriesBloc(
                               expenseRepository: context
                                   .read<GetExpensesBloc>()
                                   .expenseRepository)
-                                ..add(GetCategories()),
+                            ..add(GetCategories()),
                         ),
                         BlocProvider(
-                          create: (context) =>
-                              CreateExpenseBloc(
+                          create: (context) => CreateExpenseBloc(
                               expenseRepository: context
                                   .read<GetExpensesBloc>()
                                   .expenseRepository),
@@ -105,11 +94,12 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                     ),
                   ),
                 );
-              
-                if (newExpense != null) {
+
+                if (category != null) {
                   setState(() {
-                    devtools.log('2. cache: $cache');
-                    state.expenses.insert(0, newExpense);
+                    state.categories.removeWhere(
+                        (c) => c.categoryId == category.categoryId);
+                    state.categories.insert(0, category);
                   });
                 }
               },
@@ -131,10 +121,10 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
               ),
             ),
             body: index == 0
-                ? ExpenseMainScreen(state.expenses)
+                ? ExpenseMainScreen(state.categories)
                 : const StatScreen(),
           );
-        } else if (state.status == ExpensesOverviewStatus.loading) {
+        } else if (state.status == CategoriesOverviewStatus.loading) {
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),

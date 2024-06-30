@@ -42,6 +42,18 @@ Future getCategoryCreation(BuildContext context) {
                   setState(() {
                     isLoading = true;
                   });
+                } else if (state is CreateCategoryFailure) {
+                  setState(() {
+                    isLoading = false; // Hide loading indicator
+                  });
+                  // Show an error message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                              'Failed to create expense ${state.error}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
                 }
               },
               child: StatefulBuilder(builder: (ctx, setState) {

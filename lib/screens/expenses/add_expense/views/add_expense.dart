@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 
 import 'package:uuid/uuid.dart';
 
@@ -23,6 +24,7 @@ class _AddExpenseState extends State<AddExpense> {
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   late Expense expense;
+  late ExpCategory category;
   bool isLoading = false;
 
   @override
@@ -35,6 +37,7 @@ class _AddExpenseState extends State<AddExpense> {
     super.initState();
     dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
     expense = Expense.empty(const Uuid().v1());
+    category = ExpCategory.empty('');
   }
 
   @override
@@ -42,10 +45,20 @@ class _AddExpenseState extends State<AddExpense> {
     return BlocListener<CreateExpenseBloc, CreateExpenseState>(
       listener: (context, state) {
         if (state is CreateExpenseSuccess) {
-          Navigator.pop(context, expense);
+          Navigator.pop(context, category);
         } else if (state is CreateExpenseLoading) {
           setState(() {
             isLoading = true;
+          });
+        } else if (state is CreateExpenseFailure) {
+          setState(() {
+            isLoading = false; // Hide loading indicator
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to create expense ${state.error}'),
+                backgroundColor: Colors.red,
+              ),
+            );
           });
         }
       },
@@ -59,7 +72,7 @@ class _AddExpenseState extends State<AddExpense> {
           ),
           body: BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
             builder: (context, state) {
-              if (state is GetCategoriesSuccess) {
+              if (state.status == CategoriesOverviewStatus.success) {
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -101,17 +114,17 @@ class _AddExpenseState extends State<AddExpense> {
                         decoration: InputDecoration(
                           hintText: 'Category',
                           filled: true,
-                          fillColor: expense.category.color == 0
+                          fillColor: category.color == 0
                               ? Colors.white
-                              : Color(expense.category.color),
-                          prefixIcon: expense.category.icon == ''
+                              : Color(category.color),
+                          prefixIcon: category.icon == ''
                               ? const Icon(
                                   FontAwesomeIcons.list,
                                   size: 16,
                                   color: Colors.grey,
                                 )
                               : Image.asset(
-                                  'assets/${expense.category.icon}.png',
+                                  'assets/${category.icon}.png',
                                   scale: 2,
                                 ),
                           suffixIcon: IconButton(
@@ -152,15 +165,25 @@ class _AddExpenseState extends State<AddExpense> {
                             itemBuilder: (context, int i) {
                               return Card(
                                 child: ListTile(
-                                  onTap: () {
+                                  onTap: () async {
                                     setState(() {
                                       // expense.category = state.categories[i];
                                       expense = expense.copyWith(
-                                        category: state.categories[i],
+                                        categoryId:
+                                            state.categories[i].categoryId,
                                       );
-
-                                      categoryController.text =
-                                          expense.category.name;
+                                    });
+                                    final categoryStream = context
+                                        .read<GetExpensesBloc>()
+                                        .expenseRepository
+                                        .getCategories(
+                                            categoryId: expense.categoryId);
+                                    await for (final value in categoryStream) {
+                                      category = value.first;
+                                      break;
+                                    }
+                                    setState(() {
+                                      categoryController.text = category.name;
                                     });
                                   },
                                   leading: Image.asset(
@@ -224,21 +247,37 @@ class _AddExpenseState extends State<AddExpense> {
                         child: isLoading
                             ? const Center(child: CircularProgressIndicator())
                             : TextButton(
-                                onPressed: expense.category.name == '' ||
+                                onPressed: category.name == '' ||
                                         expenseController.text == ''
-                                    ? null
-                                    : () {
+                                    ? () {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Failed to create expense. Please fill all the entries.'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      }
+                                    : () async {
                                         setState(() {
                                           expense = expense.copyWith(
-                                              userId: FirebaseAuth
-                                                  .instance.currentUser!.uid,
-                                              amount: int.parse(
-                                                  expenseController.text),
-                                              );
-                                          context
-                                              .read<CreateExpenseBloc>()
-                                              .add(CreateExpense(expense));
+                                            userId: FirebaseAuth
+                                                .instance.currentUser!.uid,
+                                            amount: int.parse(
+                                                expenseController.text),
+                                          );
+                                          category.totalExpenses +=
+                                              expense.amount;
                                         });
+                                        await context
+                                            .read<GetExpensesBloc>()
+                                            .expenseRepository
+                                            .updateCategory(category);
+
+                                        context
+                                            .read<CreateExpenseBloc>()
+                                            .add(CreateExpense(expense));
                                       },
                                 style: TextButton.styleFrom(
                                     backgroundColor: Colors.black,

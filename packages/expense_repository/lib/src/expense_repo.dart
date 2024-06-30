@@ -1,21 +1,22 @@
 import 'package:expense_repository/expense_repository.dart';
 
 abstract class ExpenseRepository {
-  Future<void> createCategory(ExpCategory category);    // Create
+  Future<void> createCategory(ExpCategory category); // Create
 
-  Future<List<ExpCategory>> getCategory();              // Read
+  Stream<List<ExpCategory>> getCategories(
+      {String? userId, String? categoryId}); // Read All
 
-  Future<void> deleteCategory(String categoryId);       // Update
+  Future<void> deleteCategory(String categoryId); // Update
 
-  Future<void> updateCategory(ExpCategory category);    // Delete
+  Future<void> updateCategory(ExpCategory category); // Delete
 
   // The CRUD Commands
 
-  Future<void> createExpense(Expense expense);          // Create
+  Future<void> createExpense(Expense expense); // Create
 
-  Stream<List<Expense>> getExpenses();                  // Read
+  Stream<List<Expense>> getExpenses(); // Read All
 
-  Future<void> updateExpense(Expense expense);          // Update
+  Future<void> updateExpense(Expense expense); // Update
 
-  Future<void> deleteExpense(String expenseId);         // Delete
+  Future<void> deleteExpense(String expenseId); // Delete
 }

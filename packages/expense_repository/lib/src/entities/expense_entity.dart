@@ -1,18 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expense_repository/src/entities/entities.dart';
-import '../models/models.dart';
 
 class ExpenseEntity {
   String expenseId;
   String userId; // Add userId field
-  ExpCategory category;
+  String categoryId;
   DateTime date;
   int amount;
 
   ExpenseEntity({
     required this.expenseId,
     required this.userId,
-    required this.category,
+    required this.categoryId,
     required this.date,
     required this.amount,
   });
@@ -21,7 +19,7 @@ class ExpenseEntity {
     return {
       'expenseId': expenseId,
       'userId': userId, // Include userId in the document
-      'category': category.toEntity().toDocument(),
+      'categoryId': categoryId,
       'date': Timestamp.fromDate(date), // Convert DateTime to Timestamp
       'amount': amount,
     };
@@ -31,8 +29,7 @@ class ExpenseEntity {
     return ExpenseEntity(
       expenseId: doc['expenseId'],
       userId: doc['userId'], // Extract userId from document
-      category: ExpCategory.fromEntity(
-          ExpCategoryEntity.fromDocument(doc['category'])),
+      categoryId: doc['categoryId'],
       date: (doc['date'] as Timestamp).toDate(),
       amount: doc['amount'],
     );
@@ -45,13 +42,13 @@ class ExpenseEntity {
 
 // class ExpenseEntity {
 //   String expenseId;
-//   Category category;
+//   categoryId categoryId;
 //   DateTime date;
 //   int amount;
 
 //   ExpenseEntity({
 //     required this.expenseId,
-//     required this.category,
+//     required this.categoryId,
 //     required this.date,
 //     required this.amount,
 //   });
@@ -59,7 +56,7 @@ class ExpenseEntity {
 //   Map<String, Object?> toDocument() {
 //     return {
 //       'expenseId': expenseId,
-//       'category': category.toEntity().toDocument(),
+//       'categoryId': categoryId.toEntity().toDocument(),
 //       'date': date,
 //       'amount': amount,
 //     };
@@ -68,8 +65,8 @@ class ExpenseEntity {
 //   static ExpenseEntity fromDocument(Map<String, dynamic> doc) {
 //     return ExpenseEntity(
 //       expenseId: doc['expenseId'],
-//       category:
-//           Category.fromEntity(CategoryEntity.fromDocument(doc['category'])),
+//       categoryId:
+//           categoryId.fromEntity(categoryIdEntity.fromDocument(doc['categoryId'])),
 //       date: (doc['date'] as Timestamp).toDate(),
 //       amount: doc['amount'],
 //     );

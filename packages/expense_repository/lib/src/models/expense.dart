@@ -3,21 +3,21 @@ import 'package:expense_repository/expense_repository.dart';
 class Expense {
   final String expenseId;
   final String userId; // Add userId field
-  final ExpCategory category;
+  final String categoryId;
   final DateTime date;
   final int amount;
 
   const Expense({
     required this.expenseId,
     required this.userId, // Add userId to the constructor
-    required this.category,
+    required this.categoryId,
     required this.date,
     required this.amount,
   });
 
   Expense.empty(this.expenseId)
       : userId = '',
-        category = ExpCategory.empty(''),
+        categoryId = '',
         date = DateTime.now(),
         amount = 0;
 
@@ -25,7 +25,7 @@ class Expense {
     return ExpenseEntity(
       expenseId: expenseId,
       userId: userId, // Pass userId to ExpenseEntity
-      category: category,
+      categoryId: categoryId,
       date: date,
       amount: amount,
     );
@@ -35,7 +35,7 @@ class Expense {
     return Expense(
       expenseId: entity.expenseId,
       userId: entity.userId, // Assign userId from ExpenseEntity
-      category: entity.category,
+      categoryId: entity.categoryId,
       date: entity.date,
       amount: entity.amount,
     );
@@ -43,7 +43,7 @@ class Expense {
 
   @override
   String toString() {
-    return 'Expense(expenseId: $expenseId, userId: $userId, category: $category, date: $date, amount: $amount)';
+    return 'Expense(expenseId: $expenseId, userId: $userId, category: $categoryId, date: $date, amount: $amount)';
   }
 
   @override
@@ -53,31 +53,32 @@ class Expense {
     return other is Expense &&
         other.expenseId == expenseId &&
         other.userId == userId &&
-        other.category == category &&
+        other.categoryId == categoryId &&
         other.date == date &&
         other.amount == amount;
   }
 
   @override
   int get hashCode {
-    return Object.hash(expenseId, userId, category, date, amount);
+    return Object.hash(expenseId, userId, categoryId, date, amount);
   }
 
   Expense copyWith({
     String? expenseId,
     String? userId,
-    ExpCategory? category,
+    String? categoryId,
     DateTime? date,
     int? amount,
   }) {
     return Expense(
       expenseId: expenseId ?? this.expenseId,
       userId: userId ?? this.userId,
-      category: category ?? this.category,
+      categoryId: categoryId ?? this.categoryId,
       date: date ?? this.date,
       amount: amount ?? this.amount,
     );
   }
+
 }
 
 // import 'package:expense_repository/expense_repository.dart';

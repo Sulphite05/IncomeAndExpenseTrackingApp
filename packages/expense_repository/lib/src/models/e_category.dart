@@ -1,14 +1,14 @@
 import '../entities/entities.dart';
 
 class ExpCategory {
-   final String categoryId;
-   final String userId; // Add userId field
-   final String name;
-   final int totalExpenses;
-   final String icon;
-   final int color;
+  final String categoryId;
+  final String userId; // Add userId field
+  final String name;
+  int totalExpenses;
+  final String icon;
+  final int color;
 
-  const ExpCategory({
+  ExpCategory({
     required this.categoryId,
     required this.userId, // Add userId to the constructor
     required this.name,
@@ -17,12 +17,12 @@ class ExpCategory {
     required this.color,
   });
 
-  ExpCategory.empty(this.categoryId):
-    userId = '',
-    name = '',
-    totalExpenses = 0,
-    icon = '',
-    color = 0;
+  ExpCategory.empty(this.categoryId)
+      : userId = '',
+        name = '',
+        totalExpenses = 0,
+        icon = '',
+        color = 0;
 
   ExpCategoryEntity toEntity() {
     return ExpCategoryEntity(
@@ -55,13 +55,17 @@ class ExpCategory {
     int? color,
   }) {
     return ExpCategory(
-      categoryId: categoryId ?? this.categoryId,
-      userId: userId ?? this.userId,
-      name: name ?? this.name,
-      totalExpenses: totalExpenses ?? this.totalExpenses,
-      icon: icon ?? this.icon,
-      color: color ?? this.color
-    );
+        categoryId: categoryId ?? this.categoryId,
+        userId: userId ?? this.userId,
+        name: name ?? this.name,
+        totalExpenses: totalExpenses ?? this.totalExpenses,
+        icon: icon ?? this.icon,
+        color: color ?? this.color);
+  }
+
+  @override
+  String toString() {
+    return 'ExpCategory(categoryId: $categoryId, userId: $userId, name: $name, totalExpenses: $totalExpenses, icon: $icon, color: $color)';
   }
 }
 // import '../entities/entities.dart';
