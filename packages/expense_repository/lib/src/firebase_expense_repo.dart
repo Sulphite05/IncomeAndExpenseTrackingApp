@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_repository/expense_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseExpenseRepo implements ExpenseRepository {
   final categoryCollection =
@@ -123,18 +123,28 @@ class FirebaseExpenseRepo implements ExpenseRepository {
   }
 
   @override
-  Stream<List<Expense>> getExpenses() async* {
+  Stream<List<Expense>> getExpenses(
+      {String? userId, String? categoryId}) async* {
     try {
-      String userId =
-          FirebaseAuth.instance.currentUser!.uid; // Get current user's userId
+      String userId = FirebaseAuth.instance.currentUser!.uid;
 
-      yield await expenseCollection
-          .where('userId', isEqualTo: userId) // Filter by userId
-          .get()
-          .then((value) => value.docs
-              .map((e) =>
-                  Expense.fromEntity(ExpenseEntity.fromDocument(e.data())))
-              .toList());
+      if (categoryId != null) {
+        yield await expenseCollection
+            .where('categoryId', isEqualTo: categoryId) // Filter by userId
+            .get()
+            .then((value) => value.docs
+                .map((e) =>
+                    Expense.fromEntity(ExpenseEntity.fromDocument(e.data())))
+                .toList());
+      } else {
+        yield await expenseCollection
+            .where('userId', isEqualTo: userId) // Filter by userId
+            .get()
+            .then((value) => value.docs
+                .map((e) =>
+                    Expense.fromEntity(ExpenseEntity.fromDocument(e.data())))
+                .toList());
+      }
     } catch (e) {
       log(e.toString());
       rethrow;

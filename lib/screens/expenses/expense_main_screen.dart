@@ -3,6 +3,10 @@ import 'dart:math';
 import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
+
+import 'add_expense/views/category_expenses.dart';
 
 class ExpenseMainScreen extends StatelessWidget {
   final List<ExpCategory> categories;
@@ -113,7 +117,7 @@ class ExpenseMainScreen extends StatelessWidget {
                       height: 12,
                     ),
                     const Text(
-                      '\$ 400,000',
+                      'Rs. 400,000',
                       style: TextStyle(
                         fontSize: 40,
                         color: Colors.white,
@@ -161,7 +165,7 @@ class ExpenseMainScreen extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      '\$ 20,000',
+                                      'Rs. 20,000',
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,
@@ -204,7 +208,7 @@ class ExpenseMainScreen extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      '\$ 15,000',
+                                      'Rs. 15,000',
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,
@@ -250,91 +254,109 @@ class ExpenseMainScreen extends StatelessWidget {
               height: 20,
             ),
             Expanded(
-                child: ListView.builder(
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                final category = categories[index];
-                // final category = context
-                //     .read<GetExpensesBloc>()
-                //     .expenseRepository
-                //     .getCategories(categoryId: expenses[index].categoryId);
-
-                return Padding(
-                  key: ValueKey(category.categoryId),
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: Color(category.color),
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  Image.asset(
-                                    'assets/${category.icon}.png',
-                                    scale: 2,
-                                    color: Colors.white,
-                                  ),
-                                ],
+              child: ListView.builder(
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (context) => GetExpensesBloc(
+                                  expenseRepository: context
+                                      .read<GetExpensesBloc>()
+                                      .expenseRepository)
+                                ..add(GetExpenses(
+                                    categoryId: category.categoryId)),
+                              child: CategoryExpensesScreen(
+                                category: category,
                               ),
-                              const SizedBox(
-                                width: 12.0,
-                              ),
-                              Text(
-                                category.name,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                '\$${category.totalExpenses}.00',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w400,
+                        );
+                        // Navigate to the CategoryDetailPage
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => CategoryExpensesScreen(
+                        //       category: category,
+                        //     ),
+                        //   ),
+                        // );
+                      },
+                      child: Padding(
+                        key: ValueKey(category.categoryId),
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            color: Color(category.color),
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                        Image.asset(
+                                          'assets/${category.icon}.png',
+                                          scale: 2,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      width: 12.0,
+                                    ),
+                                    Text(
+                                      category.name,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              // Text(
-                              //   DateFormat('dd/MM/yyyy').format(expense.date),
-                              //   style: TextStyle(
-                              //     fontSize: 14,
-                              //     color: Theme.of(context).colorScheme.outline,
-                              //     fontWeight: FontWeight.w400,
-                              //   ),
-                              // ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            )),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'Rs. ${category.totalExpenses}.00',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ));
+                },
+              ),
+            )
           ],
         ),
       ),

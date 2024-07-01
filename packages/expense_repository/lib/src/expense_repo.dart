@@ -14,7 +14,7 @@ abstract class ExpenseRepository {
 
   Future<void> createExpense(Expense expense); // Create
 
-  Stream<List<Expense>> getExpenses(); // Read All
+  Stream<List<Expense>> getExpenses({String? userId, String? categoryId}); // Read All
 
   Future<void> updateExpense(Expense expense); // Update
 

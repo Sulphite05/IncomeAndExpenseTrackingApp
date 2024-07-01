@@ -4,6 +4,7 @@ class Expense {
   final String expenseId;
   final String userId; // Add userId field
   final String categoryId;
+  final String name;
   final DateTime date;
   final int amount;
 
@@ -11,6 +12,7 @@ class Expense {
     required this.expenseId,
     required this.userId, // Add userId to the constructor
     required this.categoryId,
+    required this.name,
     required this.date,
     required this.amount,
   });
@@ -18,6 +20,7 @@ class Expense {
   Expense.empty(this.expenseId)
       : userId = '',
         categoryId = '',
+        name = '',
         date = DateTime.now(),
         amount = 0;
 
@@ -26,6 +29,7 @@ class Expense {
       expenseId: expenseId,
       userId: userId, // Pass userId to ExpenseEntity
       categoryId: categoryId,
+      name: name,
       date: date,
       amount: amount,
     );
@@ -36,6 +40,7 @@ class Expense {
       expenseId: entity.expenseId,
       userId: entity.userId, // Assign userId from ExpenseEntity
       categoryId: entity.categoryId,
+      name: entity.name,
       date: entity.date,
       amount: entity.amount,
     );
@@ -43,7 +48,7 @@ class Expense {
 
   @override
   String toString() {
-    return 'Expense(expenseId: $expenseId, userId: $userId, category: $categoryId, date: $date, amount: $amount)';
+    return 'Expense(expenseId: $expenseId, userId: $userId, category: $categoryId, name: $name, date: $date, amount: $amount)';
   }
 
   @override
@@ -54,19 +59,21 @@ class Expense {
         other.expenseId == expenseId &&
         other.userId == userId &&
         other.categoryId == categoryId &&
+        other.name == name &&
         other.date == date &&
         other.amount == amount;
   }
 
   @override
   int get hashCode {
-    return Object.hash(expenseId, userId, categoryId, date, amount);
+    return Object.hash(expenseId, userId, categoryId, name, date, amount);
   }
 
   Expense copyWith({
     String? expenseId,
     String? userId,
     String? categoryId,
+    String? name,
     DateTime? date,
     int? amount,
   }) {
@@ -74,6 +81,7 @@ class Expense {
       expenseId: expenseId ?? this.expenseId,
       userId: userId ?? this.userId,
       categoryId: categoryId ?? this.categoryId,
+      name: name ?? this.name,
       date: date ?? this.date,
       amount: amount ?? this.amount,
     );

@@ -20,7 +20,8 @@ class AddExpense extends StatefulWidget {
 }
 
 class _AddExpenseState extends State<AddExpense> {
-  TextEditingController expenseController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   late Expense expense;
@@ -91,12 +92,13 @@ class _AddExpenseState extends State<AddExpense> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.7,
                         child: TextFormField(
-                          controller: expenseController,
+                          controller: amountController,
                           decoration: InputDecoration(
                               filled: true,
+                              hintText: 'Amount',
                               fillColor: Colors.white,
                               prefixIcon: const Icon(
-                                FontAwesomeIcons.dollarSign,
+                                FontAwesomeIcons.moneyBill1,
                                 size: 16,
                                 color: Colors.grey,
                               ),
@@ -108,6 +110,25 @@ class _AddExpenseState extends State<AddExpense> {
                       ),
                       const SizedBox(
                         height: 32,
+                      ),
+                      TextFormField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                            hintText: 'Name',
+                            filled: true,
+                            fillColor: Colors.white,
+                            prefixIcon: const Icon(
+                              FontAwesomeIcons.noteSticky,
+                              size: 16,
+                              color: Colors.grey,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            )),
+                      ),
+                      const SizedBox(
+                        height: 16,
                       ),
                       TextFormField(
                         readOnly: true,
@@ -247,38 +268,68 @@ class _AddExpenseState extends State<AddExpense> {
                         child: isLoading
                             ? const Center(child: CircularProgressIndicator())
                             : TextButton(
-                                onPressed: category.name == '' ||
-                                        expenseController.text == ''
-                                    ? () {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Failed to create expense. Please fill all the entries.'),
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        );
-                                      }
-                                    : () async {
-                                        setState(() {
-                                          expense = expense.copyWith(
-                                            userId: FirebaseAuth
-                                                .instance.currentUser!.uid,
-                                            amount: int.parse(
-                                                expenseController.text),
-                                          );
-                                          category.totalExpenses +=
-                                              expense.amount;
-                                        });
-                                        await context
-                                            .read<GetExpensesBloc>()
-                                            .expenseRepository
-                                            .updateCategory(category);
+                                onPressed: () {
+                                  if (category.name.isEmpty ||
+                                      amountController.text.isEmpty ||
+                                      nameController.text.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Please fill in all fields.'),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  } else {
+                                    // Update expense and category
+                                    setState(() {
+                                      expense = expense.copyWith(
+                                        userId: FirebaseAuth
+                                            .instance.currentUser!.uid,
+                                        name: nameController.text,
+                                        amount:
+                                            int.parse(amountController.text),
+                                      );
+                                      category.totalExpenses += expense.amount;
+                                    });
 
-                                        context
-                                            .read<CreateExpenseBloc>()
-                                            .add(CreateExpense(expense));
-                                      },
+                                    // Update category in the repository
+                                    context
+                                        .read<GetExpensesBloc>()
+                                        .expenseRepository
+                                        .updateCategory(category);
+
+                                    // Add the new expense
+                                    context
+                                        .read<CreateExpenseBloc>()
+                                        .add(CreateExpense(expense));
+
+                                    // Optionally, show a confirmation message
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Expense saved successfully.'),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                  }
+                                  setState(() {
+                                    expense = expense.copyWith(
+                                      userId: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      name: nameController.text,
+                                      amount: int.parse(amountController.text),
+                                    );
+                                    category.totalExpenses += expense.amount;
+                                  });
+                                  context
+                                      .read<GetExpensesBloc>()
+                                      .expenseRepository
+                                      .updateCategory(category);
+
+                                  context
+                                      .read<CreateExpenseBloc>()
+                                      .add(CreateExpense(expense));
+                                },
                                 style: TextButton.styleFrom(
                                     backgroundColor: Colors.black,
                                     shape: RoundedRectangleBorder(

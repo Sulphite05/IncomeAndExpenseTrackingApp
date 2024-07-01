@@ -9,6 +9,7 @@ class GetExpensesBloc extends Bloc<GetExpensesEvent, GetExpensesState> {
   GetExpensesBloc({required this.expenseRepository})
       : super(const GetExpensesState()) {
     on<GetExpenses>(_onGetExpenses);
+    on<DeleteExpense>(_onDeleteExpense);
   }
 
   final ExpenseRepository expenseRepository;
@@ -20,7 +21,10 @@ class GetExpensesBloc extends Bloc<GetExpensesEvent, GetExpensesState> {
     emit(state.copyWith(status: () => ExpensesOverviewStatus.loading));
 
     await emit.forEach<List<Expense>>(
-      expenseRepository.getExpenses(),
+      expenseRepository.getExpenses(
+        userId: event.userId,
+        categoryId: event.categoryId,
+      ),
       onData: (expenses) => state.copyWith(
         status: () => ExpensesOverviewStatus.success,
         expenses: () => expenses,
@@ -29,6 +33,33 @@ class GetExpensesBloc extends Bloc<GetExpensesEvent, GetExpensesState> {
         status: () => ExpensesOverviewStatus.failure,
       ),
     );
+  }
+
+  Future<void> _onDeleteExpense(
+    DeleteExpense event,
+    Emitter<GetExpensesState> emit,
+  ) async {
+    try {
+      // Perform the delete operation
+      await expenseRepository.deleteExpense(event.expenseId);
+
+      // Fetch updated list of expenses from the stream
+      await emit.forEach<List<Expense>>(
+        expenseRepository
+            .getExpenses(), // Use the Stream returned by getExpenses
+        onData: (expenses) => state.copyWith(
+          status: () => ExpensesOverviewStatus.success,
+          expenses: () => expenses,
+        ),
+        onError: (_, __) => state.copyWith(
+          status: () => ExpensesOverviewStatus.failure,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        status: () => ExpensesOverviewStatus.failure,
+      ));
+    }
   }
 }
 // (event, emit) async {

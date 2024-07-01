@@ -4,6 +4,7 @@ class ExpenseEntity {
   String expenseId;
   String userId; // Add userId field
   String categoryId;
+  String name;
   DateTime date;
   int amount;
 
@@ -11,6 +12,7 @@ class ExpenseEntity {
     required this.expenseId,
     required this.userId,
     required this.categoryId,
+    required this.name,
     required this.date,
     required this.amount,
   });
@@ -20,6 +22,7 @@ class ExpenseEntity {
       'expenseId': expenseId,
       'userId': userId, // Include userId in the document
       'categoryId': categoryId,
+      'name': name,
       'date': Timestamp.fromDate(date), // Convert DateTime to Timestamp
       'amount': amount,
     };
@@ -30,6 +33,7 @@ class ExpenseEntity {
       expenseId: doc['expenseId'],
       userId: doc['userId'], // Extract userId from document
       categoryId: doc['categoryId'],
+      name: doc['name'],
       date: (doc['date'] as Timestamp).toDate(),
       amount: doc['amount'],
     );

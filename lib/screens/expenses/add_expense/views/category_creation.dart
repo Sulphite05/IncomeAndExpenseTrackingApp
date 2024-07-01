@@ -49,8 +49,7 @@ Future getCategoryCreation(BuildContext context) {
                   // Show an error message
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(
-                              'Failed to create expense ${state.error}'),
+                      content: Text('Failed to create expense ${state.error}'),
                       backgroundColor: Colors.red,
                     ),
                   );
