@@ -11,9 +11,11 @@ class FirebaseExpenseRepo implements ExpenseRepository {
   @override
   Future<void> createCategory(ExpCategory category) async {
     try {
+      String userId = FirebaseAuth.instance.currentUser!.uid;
       // Check for existing categories with the same name, icon, or color
       final querySnapshot = await categoryCollection
           .where('name', isEqualTo: category.name)
+          .where('userId', isEqualTo: userId)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -38,38 +40,18 @@ class FirebaseExpenseRepo implements ExpenseRepository {
     }
   }
 
-  // @override
-  // Future<List<ExpCategory>> getCategories() async {
-  //   try {
-  //     String userId =
-  //         FirebaseAuth.instance.currentUser!.uid; // Get current user's userId
-
-  //     return categoryCollection
-  //         .where('userId', isEqualTo: userId) // Filter by userId
-  //         .get()
-  //         .then((value) => value.docs
-  //             .map((e) => ExpCategory.fromEntity(
-  //                 ExpCategoryEntity.fromDocument(e.data())))
-  //             .toList());
-  //   } catch (e) {
-  //     log(e.toString());
-  //     rethrow;
-  //   }
-  // }
-
   @override
-  Stream<List<ExpCategory>> getCategories(
-      {String? userId, String? categoryId}) async* {
+  Stream<List<ExpCategory>> getCategories({String? categoryId}) async* {
     try {
+      String userId = FirebaseAuth.instance.currentUser!.uid;
       Query query = categoryCollection;
-
-      if (userId != null) {
-        query = query.where('userId', isEqualTo: userId);
-      }
 
       if (categoryId != null) {
         query = query.where('categoryId', isEqualTo: categoryId);
+      } else {
+        query = query.where('userId', isEqualTo: userId);
       }
+
       yield await query.get().then((value) => value.docs
           .map((e) => ExpCategory.fromEntity(
               ExpCategoryEntity.fromDocument(e.data() as Map<String, dynamic>)))
@@ -95,7 +77,19 @@ class FirebaseExpenseRepo implements ExpenseRepository {
   @override
   Future<void> deleteCategory(String categoryId) async {
     try {
-      await categoryCollection.doc(categoryId).delete();
+      final categorySnapshot = await categoryCollection.doc(categoryId).get();
+      final categoryData = categorySnapshot.data();
+      if (categoryData != null) {
+        final category = ExpCategory.fromEntity(
+            ExpCategoryEntity.fromDocument(categoryData));
+        if (category.totalExpenses == 0) {
+          await categoryCollection.doc(categoryId).delete();
+        } else {
+          throw Exception('The category is not empty!');
+        }
+      } else {
+        throw Exception('Category not found!');
+      }
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -134,14 +128,13 @@ class FirebaseExpenseRepo implements ExpenseRepository {
   }
 
   @override
-  Stream<List<Expense>> getExpenses(
-      {String? userId, String? categoryId}) async* {
+  Stream<List<Expense>> getExpenses({String? categoryId}) async* {
     try {
       String userId = FirebaseAuth.instance.currentUser!.uid;
 
       if (categoryId != null) {
         yield await expenseCollection
-            .where('categoryId', isEqualTo: categoryId) // Filter by userId
+            .where('categoryId', isEqualTo: categoryId) // Filter by categoryId; won't be available for other users
             .get()
             .then((value) => value.docs
                 .map((e) =>
@@ -161,25 +154,6 @@ class FirebaseExpenseRepo implements ExpenseRepository {
       rethrow;
     }
   }
-
-  // @override
-  // Future<List<Expense>> getExpenses() async {
-  //   try {
-  //     String userId =
-  //         FirebaseAuth.instance.currentUser!.uid; // Get current user's userId
-
-  //     return await expenseCollection
-  //         .where('userId', isEqualTo: userId) // Filter by userId
-  //         .get()
-  //         .then((value) => value.docs
-  //             .map((e) =>
-  //                 Expense.fromEntity(ExpenseEntity.fromDocument(e.data())))
-  //             .toList());
-  //   } catch (e) {
-  //     log(e.toString());
-  //     rethrow;
-  //   }
-  // }
 
   @override
   Future<void> updateExpense(Expense expense) async {

@@ -16,12 +16,6 @@ class ExpenseMainScreen extends StatefulWidget {
 }
 
 class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-
-//   }
 
   @override
   Widget build(BuildContext context) {
@@ -275,8 +269,8 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
                     itemBuilder: (context, index) {
                       final category = state.categories[index];
                       return InkWell(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => BlocProvider(
@@ -292,18 +286,6 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
                                 ),
                               ),
                             );
-                            // context
-                            //     .read<GetCategoriesBloc>()
-                            //     .add(GetCategories());
-                            // Navigate to the CategoryDetailPage
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => CategoryExpensesScreen(
-                            //       category: category,
-                            //     ),
-                            //   ),
-                            // );
                             setState(() {
                               context
                                   .read<GetCategoriesBloc>()
