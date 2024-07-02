@@ -65,7 +65,7 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                 FloatingActionButtonLocation.centerDocked,
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
-                var category = await Navigator.push(
+                await Navigator.push(
                   context,
                   MaterialPageRoute<ExpCategory?>(
                     builder: (BuildContext context) => MultiBlocProvider(
@@ -95,13 +95,14 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                   ),
                 );
 
-                if (category != null) {
-                  setState(() {
-                    state.categories.removeWhere(
-                        (c) => c.categoryId == category.categoryId);
-                    state.categories.insert(0, category);
-                  });
-                }
+                // if (category != null) {
+                setState(() {
+                  // state.categories.removeWhere(
+                  //     (c) => c.categoryId == category.categoryId);
+                  // state.categories.insert(0, category);
+                  context.read<GetCategoriesBloc>().add(GetCategories());
+                });
+                // }
               },
               shape: const CircleBorder(),
               child: Container(
@@ -121,7 +122,14 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
               ),
             ),
             body: index == 0
-                ? ExpenseMainScreen(state.categories)
+                ? BlocProvider(
+                              create: (context) => GetCategoriesBloc(
+                                  expenseRepository: context
+                                      .read<GetExpensesBloc>()
+                                      .expenseRepository)
+                                ..add(GetCategories()),
+                              child: const ExpenseMainScreen(),
+                            )
                 : const StatScreen(),
           );
         } else if (state.status == CategoriesOverviewStatus.loading) {

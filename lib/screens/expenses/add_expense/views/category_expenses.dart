@@ -1,10 +1,10 @@
-import 'dart:math';
-
 import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
+
+import '../../../../components/popup.dart';
 
 class CategoryExpensesScreen extends StatefulWidget {
   final ExpCategory category;
@@ -16,36 +16,16 @@ class CategoryExpensesScreen extends StatefulWidget {
 }
 
 class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
-  Future<bool> _deleteExpense(BuildContext context, Expense expense) async {
-    // Show a confirmation dialog before deleting the expense
-    bool val = await showDialog(
+  Future<bool> showDeleteDialog(BuildContext context) {
+    return showGenericDialog<bool>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Delete Expense'),
-          content: const Text('Are you sure you want to delete this expense?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                context
-                    .read<GetExpensesBloc>()
-                    .add(DeleteExpense(expense.expenseId));
-                Navigator.of(context).pop();
-              },
-              child: const Text('Yes'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
+      title: 'Delete',
+      content: 'Are you sure you want to delete this item?',
+      optionsBuilder: () => {
+        'Cancel': false,
+        'Yes': true,
       },
-    );
-
-    return val;
+    ).then((value) => value ?? false);
   }
 
   @override
@@ -160,20 +140,21 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                               },
                             ),
                             IconButton(
-                              icon: Icon(
-                                Icons.delete_outline_rounded,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                              onPressed: () async {
-                                bool val =
-                                    await _deleteExpense(context, expense);
-                                if (val) {
-                                  setState(() {
-                                    state.expenses.removeAt(index);
-                                  });
-                                }
-                              },
-                            ),
+                                icon: Icon(
+                                  Icons.delete_outline_rounded,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                ),
+                                onPressed: () async {
+                                  bool check = await showDeleteDialog(context);
+                                  if (check) {
+                                    setState(() {
+                                      context.read<GetExpensesBloc>().add(
+                                          DeleteExpense(expense.expenseId,
+                                              widget.category.categoryId));
+                                    });
+                                  }
+                                }),
                           ],
                         ),
                       );

@@ -41,12 +41,14 @@ class GetExpensesBloc extends Bloc<GetExpensesEvent, GetExpensesState> {
   ) async {
     try {
       // Perform the delete operation
-      await expenseRepository.deleteExpense(event.expenseId);
+      await expenseRepository.deleteExpense(event.expenseId); // delete only required expense
 
       // Fetch updated list of expenses from the stream
       await emit.forEach<List<Expense>>(
         expenseRepository
-            .getExpenses(), // Use the Stream returned by getExpenses
+            .getExpenses(
+            categoryId: event.categoryId,   // store back expenses of the same category
+            ), // Use the Stream returned by getExpenses
         onData: (expenses) => state.copyWith(
           status: () => ExpensesOverviewStatus.success,
           expenses: () => expenses,

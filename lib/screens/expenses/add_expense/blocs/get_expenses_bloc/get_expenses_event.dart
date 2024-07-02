@@ -19,9 +19,10 @@ class GetExpenses extends GetExpensesEvent {
 
 class DeleteExpense extends GetExpensesEvent {
   final String expenseId;
+  final String categoryId;
 
-  const DeleteExpense(this.expenseId);
+  const DeleteExpense(this.expenseId, this.categoryId);
 
   @override
-  List<Object> get props => [expenseId];
+  List<Object> get props => [expenseId, categoryId];
 }

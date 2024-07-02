@@ -113,6 +113,17 @@ class FirebaseExpenseRepo implements ExpenseRepository {
         throw Exception('Please enter a valid amount.');
       }
 
+      // Update the category's total amount
+      final categorySnapshot =
+          await categoryCollection.doc(expense.categoryId).get();
+      final categoryData = categorySnapshot.data();
+      if (categoryData != null) {
+        final category = ExpCategory.fromEntity(
+            ExpCategoryEntity.fromDocument(categoryData));
+        category.totalExpenses += expense.amount;
+        await updateCategory(category);
+      }
+
       await expenseCollection
           .doc(expense.expenseId)
           .set(expense.toEntity().toDocument()); // Pass userId to toDocument
@@ -185,7 +196,28 @@ class FirebaseExpenseRepo implements ExpenseRepository {
   @override
   Future<void> deleteExpense(String expenseId) async {
     try {
+      // Get the expense details to fetch the amount and categoryId
+      final expenseSnapshot = await expenseCollection.doc(expenseId).get();
+      final expenseData = expenseSnapshot.data();
+      if (expenseData == null) {
+        throw Exception('Expense not found');
+      }
+      final expense =
+          Expense.fromEntity(ExpenseEntity.fromDocument(expenseData));
+
+      // Delete the expense
       await expenseCollection.doc(expenseId).delete();
+
+      // Update the category's total amount
+      final categorySnapshot =
+          await categoryCollection.doc(expense.categoryId).get();
+      final categoryData = categorySnapshot.data();
+      if (categoryData != null) {
+        final category = ExpCategory.fromEntity(
+            ExpCategoryEntity.fromDocument(categoryData));
+        category.totalExpenses -= expense.amount;
+        await updateCategory(category);
+      }
     } catch (e) {
       log(e.toString());
       rethrow;

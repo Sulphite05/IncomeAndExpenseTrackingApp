@@ -46,7 +46,7 @@ class _AddExpenseState extends State<AddExpense> {
     return BlocListener<CreateExpenseBloc, CreateExpenseState>(
       listener: (context, state) {
         if (state is CreateExpenseSuccess) {
-          Navigator.pop(context, category);
+          Navigator.pop(context);
         } else if (state is CreateExpenseLoading) {
           setState(() {
             isLoading = true;
@@ -274,8 +274,8 @@ class _AddExpenseState extends State<AddExpense> {
                                       nameController.text.isEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text(
-                                            'Please fill in all fields.'),
+                                        content:
+                                            Text('Please fill in all fields.'),
                                         backgroundColor: Colors.red,
                                       ),
                                     );
@@ -289,14 +289,14 @@ class _AddExpenseState extends State<AddExpense> {
                                         amount:
                                             int.parse(amountController.text),
                                       );
-                                      category.totalExpenses += expense.amount;
+                                      // category.totalExpenses += expense.amount;
                                     });
 
                                     // Update category in the repository
-                                    context
-                                        .read<GetExpensesBloc>()
-                                        .expenseRepository
-                                        .updateCategory(category);
+                                    // context
+                                    //     .read<GetExpensesBloc>()
+                                    //     .expenseRepository
+                                    //     .updateCategory(category);
 
                                     // Add the new expense
                                     context
@@ -306,29 +306,12 @@ class _AddExpenseState extends State<AddExpense> {
                                     // Optionally, show a confirmation message
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text(
-                                            'Expense saved successfully.'),
+                                        content:
+                                            Text('Expense saved successfully.'),
                                         backgroundColor: Colors.green,
                                       ),
                                     );
                                   }
-                                  setState(() {
-                                    expense = expense.copyWith(
-                                      userId: FirebaseAuth
-                                          .instance.currentUser!.uid,
-                                      name: nameController.text,
-                                      amount: int.parse(amountController.text),
-                                    );
-                                    category.totalExpenses += expense.amount;
-                                  });
-                                  context
-                                      .read<GetExpensesBloc>()
-                                      .expenseRepository
-                                      .updateCategory(category);
-
-                                  context
-                                      .read<CreateExpenseBloc>()
-                                      .add(CreateExpense(expense));
                                 },
                                 style: TextButton.styleFrom(
                                     backgroundColor: Colors.black,
