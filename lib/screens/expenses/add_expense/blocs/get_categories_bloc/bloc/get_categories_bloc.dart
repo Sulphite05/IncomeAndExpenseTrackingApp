@@ -44,8 +44,6 @@ class GetCategoriesBloc extends Bloc<GetCategoriesEvent, GetCategoriesState> {
       // Fetch updated list of expenses from the stream
       await emit.forEach<List<ExpCategory>>(
         expenseRepository.getCategories(
-          categoryId:
-              event.categoryId, // store back expenses of the same category
         ), // Use the Stream returned by getExpenses
         onData: (categories) => state.copyWith(
           status: () => CategoriesOverviewStatus.success,

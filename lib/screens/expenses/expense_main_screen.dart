@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +17,6 @@ class ExpenseMainScreen extends StatefulWidget {
 }
 
 class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
@@ -268,100 +268,31 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
                     itemCount: state.categories.length,
                     itemBuilder: (context, index) {
                       final category = state.categories[index];
-                      return InkWell(
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BlocProvider(
-                                  create: (context) => GetExpensesBloc(
-                                      expenseRepository: context
-                                          .read<GetExpensesBloc>()
-                                          .expenseRepository)
-                                    ..add(GetExpenses(
-                                        categoryId: category.categoryId)),
-                                  child: CategoryExpensesScreen(
-                                    category: category,
+                      return category.totalExpenses == 0
+                          ? Dismissible(
+                              key: ValueKey(category.categoryId),
+                              direction: DismissDirection.endToStart,
+                              onDismissed: (direction) {
+                                context
+                                    .read<GetCategoriesBloc>()
+                                    .add(DeleteCategory(category.categoryId));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('${category.name} deleted'),
                                   ),
-                                ),
+                                );
+                              },
+                              background: Container(
+                                color: Colors.red,
+                                alignment: Alignment.centerRight,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: const Icon(Icons.delete,
+                                    color: Colors.white),
                               ),
-                            );
-                            setState(() {
-                              context
-                                  .read<GetCategoriesBloc>()
-                                  .add(GetCategories());
-                            });
-                          },
-                          child: Padding(
-                            key: ValueKey(category.categoryId),
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Container(
-                                              width: 50,
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                color: Color(category.color),
-                                                shape: BoxShape.circle,
-                                              ),
-                                            ),
-                                            Image.asset(
-                                              'assets/${category.icon}.png',
-                                              scale: 2,
-                                              color: Colors.white,
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          width: 12.0,
-                                        ),
-                                        Text(
-                                          category.name,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          'Rs. ${category.totalExpenses}.00',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ));
+                              child: buildCategoryItem(context, category),
+                            )
+                          : buildCategoryItem(context, category);
                     },
                   ),
                 )
@@ -370,6 +301,89 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget buildCategoryItem(BuildContext context, ExpCategory category) {
+    return InkWell(
+      onTap: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => GetExpensesBloc(
+                  expenseRepository:
+                      context.read<GetExpensesBloc>().expenseRepository)
+                ..add(GetExpenses(categoryId: category.categoryId)),
+              child: CategoryExpensesScreen(category: category),
+            ),
+          ),
+        );
+        setState(() {
+          context.read<GetCategoriesBloc>().add(GetCategories());
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Color(category.color),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        Image.asset(
+                          'assets/${category.icon}.png',
+                          scale: 2,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 12.0),
+                    Text(
+                      category.name,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Rs. ${category.totalExpenses}.00',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
