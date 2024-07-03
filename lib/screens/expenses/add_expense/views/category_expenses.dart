@@ -141,6 +141,7 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                                   expense,
                                   widget.category.categoryId,
                                 );
+                                if (!context.mounted) return;
                                 context.read<GetExpensesBloc>().add(GetExpenses(
                                     categoryId: widget.category.categoryId));
                               },
@@ -154,6 +155,7 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                                 onPressed: () async {
                                   bool check = await showDeleteDialog(context);
                                   if (check) {
+                                    if (!context.mounted) return;
                                     context.read<GetExpensesBloc>().add(
                                         DeleteExpense(expense.expenseId,
                                             widget.category.categoryId));

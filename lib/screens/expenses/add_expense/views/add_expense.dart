@@ -230,7 +230,8 @@ class _AddExpenseState extends State<AddExpense> {
                           DateTime? newDate = await showDatePicker(
                             context: context,
                             initialDate: expense.date,
-                            firstDate: DateTime.now(),
+                            firstDate:
+                                DateTime.now().add(const Duration(days: -365)),
                             lastDate: DateTime.now().add(
                               const Duration(days: 365),
                             ),
@@ -241,7 +242,7 @@ class _AddExpenseState extends State<AddExpense> {
                               dateController.text =
                                   DateFormat('dd/MM/yyyy').format(newDate);
                               // expense.date = newDate;
-                              expense.copyWith(date: newDate);
+                              expense = expense.copyWith(date: newDate);
                             });
                           }
                         },
