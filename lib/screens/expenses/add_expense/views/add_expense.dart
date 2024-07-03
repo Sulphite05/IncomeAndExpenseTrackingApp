@@ -150,10 +150,11 @@ class _AddExpenseState extends State<AddExpense> {
                                 ),
                           suffixIcon: IconButton(
                             onPressed: () async {
-                              var newCategory =
-                                  await getCategoryCreation(context);
+                              await getCategoryCreation(context);
                               setState(() {
-                                state.categories.insert(0, newCategory);
+                                context
+                                    .read<GetCategoriesBloc>()
+                                    .add(GetCategories());
                               });
                             },
                             icon: const Icon(

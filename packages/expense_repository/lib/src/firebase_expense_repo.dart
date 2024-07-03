@@ -155,17 +155,35 @@ class FirebaseExpenseRepo implements ExpenseRepository {
     }
   }
 
-  @override
-  Future<void> updateExpense(Expense expense) async {
-    try {
-      await expenseCollection
-          .doc(expense.expenseId)
-          .update(expense.toEntity().toDocument());
-    } catch (e) {
-      log(e.toString());
-      rethrow;
+@override
+Future<void> updateExpense(Expense expense) async {
+  try {
+    // Get the current expense from the database
+    final expenseSnapshot = await expenseCollection.doc(expense.expenseId).get();
+    final expenseData = expenseSnapshot.data();
+    if (expenseData == null) {
+      throw Exception('Expense not found');
     }
+    final currentExpense = Expense.fromEntity(ExpenseEntity.fromDocument(expenseData));
+
+    // Calculate the difference between the new and old expense amounts
+    final amountDifference = expense.amount - currentExpense.amount;
+
+    // Update the category's total amount
+    final categorySnapshot = await categoryCollection.doc(expense.categoryId).get();
+    final categoryData = categorySnapshot.data();
+    if (categoryData != null) {
+      final category = ExpCategory.fromEntity(ExpCategoryEntity.fromDocument(categoryData));
+      category.totalExpenses += amountDifference;
+      await updateCategory(category);
+    }
+
+    // Update the expense in the database
+    await expenseCollection.doc(expense.expenseId).update(expense.toEntity().toDocument());
+  } catch (e) {
+    log(e.toString());
   }
+}
 
   @override
   Future<void> deleteExpense(String expenseId) async {

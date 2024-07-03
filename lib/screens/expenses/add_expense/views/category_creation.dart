@@ -37,7 +37,7 @@ Future getCategoryCreation(BuildContext context) {
             return BlocListener<CreateCategoryBloc, CreateCategoryState>(
               listener: (context, state) {
                 if (state is CreateCategorySuccess) {
-                  Navigator.pop(ctx, category);
+                  Navigator.pop(ctx);
                 } else if (state is CreateCategoryLoading) {
                   setState(() {
                     isLoading = true;
@@ -228,17 +228,6 @@ Future getCategoryCreation(BuildContext context) {
                               ? const Center(child: CircularProgressIndicator())
                               : TextButton(
                                   onPressed: () {
-                                    // Create category object and pop
-                                    // setState(() {
-                                    //   category.userId = FirebaseAuth
-                                    //       .instance.currentUser!.uid;
-                                    //   category.categoryId = const Uuid()
-                                    //       .v1(); // algos to generate your id
-                                    //   category.name =
-                                    //       categoryNameController.text;
-                                    //   category.icon = iconSelected;
-                                    //   category.color = categoryColor.value;
-                                    // });
                                     setState(() {
                                       category = ExpCategory(
                                           totalExpenses: 0,
@@ -249,7 +238,6 @@ Future getCategoryCreation(BuildContext context) {
                                           icon: iconSelected,
                                           color: categoryColor.value);
                                     });
-
                                     context
                                         .read<CreateCategoryBloc>()
                                         .add(CreateCategory(category));

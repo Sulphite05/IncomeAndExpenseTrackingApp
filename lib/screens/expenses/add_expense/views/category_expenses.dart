@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 
 import '../../../../components/popup.dart';
+import 'update_expense.dart';
 
 class CategoryExpensesScreen extends StatefulWidget {
   final ExpCategory category;
@@ -134,9 +135,14 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                                 Icons.edit,
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
-                              onPressed: () {
-                                // Implement editing functionality here
-                                // _editExpense(context, expense);
+                              onPressed: () async {
+                                await updateExpense(
+                                  context,
+                                  expense,
+                                  widget.category.categoryId,
+                                );
+                                context.read<GetExpensesBloc>().add(GetExpenses(
+                                    categoryId: widget.category.categoryId));
                               },
                             ),
                             IconButton(
@@ -148,11 +154,9 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                                 onPressed: () async {
                                   bool check = await showDeleteDialog(context);
                                   if (check) {
-                                    setState(() {
-                                      context.read<GetExpensesBloc>().add(
-                                          DeleteExpense(expense.expenseId,
-                                              widget.category.categoryId));
-                                    });
+                                    context.read<GetExpensesBloc>().add(
+                                        DeleteExpense(expense.expenseId,
+                                            widget.category.categoryId));
                                   }
                                 }),
                           ],
