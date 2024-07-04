@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "230018660759",
+    "project_id": "smart-ghr-wali-dbs",
+    "storage_bucket": "smart-ghr-wali-dbs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:230018660759:android:0aa1785f3612f00858ecd2",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1mMZlpPhxJjl4_H8vMBW5Ykef36ie8_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
