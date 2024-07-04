@@ -10,6 +10,9 @@ import '../../blocs/my_user_bloc/my_user_bloc.dart';
 import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
 import '../../blocs/update_user_info_bloc/update_user_info_bloc.dart';
 import '../expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
+import '../incomes/add_income/blocs/get_icategories_bloc/bloc/get_icategories_bloc.dart';
+import '../incomes/add_income/blocs/get_incomes_bloc/get_incomes_bloc.dart';
+import '../incomes/income_home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -193,7 +196,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w600,
                           color: Colors.white),
                     ),
-                    Container(
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (context) => GetIncCategoriesBloc(
+                                  incomeRepository: context
+                                      .read<GetIncomesBloc>()
+                                      .incomeRepository)
+                                ..add(GetIncCategories()),
+                              child: const IncomeHomeScreen(),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
                         padding: const EdgeInsets.all(8.0),
                         decoration: const BoxDecoration(
                             shape: BoxShape.circle, color: Colors.white),
@@ -201,7 +220,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           Icons.arrow_right_alt_outlined,
                           size: 25.0,
                           color: Colors.green,
-                        ))
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

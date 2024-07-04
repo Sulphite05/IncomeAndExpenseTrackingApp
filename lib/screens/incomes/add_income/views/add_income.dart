@@ -1,61 +1,57 @@
-import 'package:expense_repository/expense_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:income_repository/income_repository.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
+import 'package:smart_ghr_wali/screens/incomes/add_income/views/category_creation.dart';
 
 import 'package:uuid/uuid.dart';
 
-import '../blocs/create_expense_bloc/create_expense_bloc.dart';
-import '../blocs/get_categories_bloc/bloc/get_categories_bloc.dart';
-import 'category_creation.dart';
+import '../blocs/create_income_bloc/create_income_bloc.dart';
+import '../blocs/get_icategories_bloc/bloc/get_icategories_bloc.dart';
+import '../blocs/get_incomes_bloc/get_incomes_bloc.dart';
 
-class AddExpense extends StatefulWidget {
-  const AddExpense({super.key});
+class AddIncome extends StatefulWidget {
+  const AddIncome({super.key});
 
   @override
-  State<AddExpense> createState() => _AddExpenseState();
+  State<AddIncome> createState() => _AddIncomeState();
 }
 
-class _AddExpenseState extends State<AddExpense> {
+class _AddIncomeState extends State<AddIncome> {
   TextEditingController amountController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController dateController = TextEditingController();
-  late Expense expense;
-  late ExpCategory category;
+  late Income income;
+  late IncCategory category;
   bool isLoading = false;
 
   @override
   void initState() {
     dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
-    // expense = Expense.empty;
-    // expense.category = ExpCategory.empty;
-    // super.initState();
-    // expense.expenseId = const Uuid().v1();
     super.initState();
     dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
-    expense = Expense.empty(const Uuid().v1());
-    category = ExpCategory.empty('');
+    income = Income.empty(const Uuid().v1());
+    category = IncCategory.empty('');
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CreateExpenseBloc, CreateExpenseState>(
+    return BlocListener<CreateIncomeBloc, CreateIncomeState>(
       listener: (context, state) {
-        if (state is CreateExpenseSuccess) {
-        } else if (state is CreateExpenseLoading) {
+        if (state is CreateIncomeSuccess) {
+        } else if (state is CreateIncomeLoading) {
           setState(() {
             isLoading = true;
           });
-        } else if (state is CreateExpenseFailure) {
+        } else if (state is CreateIncomeFailure) {
           setState(() {
             isLoading = false; // Hide loading indicator
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Failed to create expense ${state.error}'),
+                content: Text('Failed to create Income ${state.error}'),
                 backgroundColor: Colors.red,
               ),
             );
@@ -70,16 +66,16 @@ class _AddExpenseState extends State<AddExpense> {
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.surface,
           ),
-          body: BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
+          body: BlocBuilder<GetIncCategoriesBloc, GetIncCategoriesState>(
             builder: (context, state) {
-              if (state.status == CategoriesOverviewStatus.success) {
+              if (state.status == IncCategoriesOverviewStatus.success) {
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text(
-                        'Add Expense',
+                        'Add Income',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w500,
@@ -152,8 +148,8 @@ class _AddExpenseState extends State<AddExpense> {
                               await getCategoryCreation(context);
                               setState(() {
                                 context
-                                    .read<GetCategoriesBloc>()
-                                    .add(GetCategories());
+                                    .read<GetIncCategoriesBloc>()
+                                    .add(GetIncCategories());
                               });
                             },
                             icon: const Icon(
@@ -180,25 +176,24 @@ class _AddExpenseState extends State<AddExpense> {
                             ),
                           ),
                           width: MediaQuery.of(context).size.width,
-                          // color: Colors.red,
                           child: ListView.builder(
-                            itemCount: state.categories.length,
+                            itemCount: state.incCategories.length,
                             itemBuilder: (context, int i) {
                               return Card(
                                 child: ListTile(
                                   onTap: () async {
                                     setState(() {
-                                      // expense.category = state.categories[i];
-                                      expense = expense.copyWith(
+                                      // income.category = state.incCategories[i];
+                                      income = income.copyWith(
                                         categoryId:
-                                            state.categories[i].categoryId,
+                                            state.incCategories[i].categoryId,
                                       );
                                     });
                                     final categoryStream = context
-                                        .read<GetExpensesBloc>()
-                                        .expenseRepository
+                                        .read<GetIncomesBloc>()
+                                        .incomeRepository
                                         .getCategories(
-                                            categoryId: expense.categoryId);
+                                            categoryId: income.categoryId);
                                     await for (final value in categoryStream) {
                                       category = value.first;
                                       break;
@@ -208,11 +203,12 @@ class _AddExpenseState extends State<AddExpense> {
                                     });
                                   },
                                   leading: Image.asset(
-                                    'assets/${state.categories[i].icon}.png',
+                                    'assets/${state.incCategories[i].icon}.png',
                                     scale: 2,
                                   ),
-                                  title: Text(state.categories[i].name),
-                                  tileColor: Color(state.categories[i].color),
+                                  title: Text(state.incCategories[i].name),
+                                  tileColor:
+                                      Color(state.incCategories[i].color),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -228,7 +224,7 @@ class _AddExpenseState extends State<AddExpense> {
                         onTap: () async {
                           DateTime? newDate = await showDatePicker(
                             context: context,
-                            initialDate: expense.date,
+                            initialDate: income.date,
                             firstDate:
                                 DateTime.now().add(const Duration(days: -365)),
                             lastDate: DateTime.now().add(
@@ -240,8 +236,7 @@ class _AddExpenseState extends State<AddExpense> {
                             setState(() {
                               dateController.text =
                                   DateFormat('dd/MM/yyyy').format(newDate);
-                              // expense.date = newDate;
-                              expense = expense.copyWith(date: newDate);
+                              income = income.copyWith(date: newDate);
                             });
                           }
                         },
@@ -281,35 +276,28 @@ class _AddExpenseState extends State<AddExpense> {
                                       ),
                                     );
                                   } else {
-                                    // Update expense and category
+                                    // Update Income and category
                                     setState(() {
-                                      expense = expense.copyWith(
+                                      income = income.copyWith(
                                         userId: FirebaseAuth
                                             .instance.currentUser!.uid,
                                         name: nameController.text,
                                         amount:
                                             int.parse(amountController.text),
                                       );
-                                      // category.totalExpenses += expense.amount;
                                     });
 
-                                    // Update category in the repository
-                                    // context
-                                    //     .read<GetExpensesBloc>()
-                                    //     .expenseRepository
-                                    //     .updateCategory(category);
 
-                                    // Add the new expense
                                     context
-                                        .read<CreateExpenseBloc>()
-                                        .add(CreateExpense(expense));
+                                        .read<CreateIncomeBloc>()
+                                        .add(CreateIncome(income));
 
                                     Navigator.pop(context);
 
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                         content:
-                                            Text('Expense saved successfully.'),
+                                            Text('Income saved successfully.'),
                                         backgroundColor: Colors.green,
                                       ),
                                     );

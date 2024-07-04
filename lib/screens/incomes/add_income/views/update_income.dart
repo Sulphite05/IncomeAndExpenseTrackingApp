@@ -1,36 +1,37 @@
-import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
+import 'package:income_repository/income_repository.dart';
 
-Future<void> updateExpense(
-    BuildContext context, Expense expense, String categoryId) {
+import '../blocs/get_incomes_bloc/get_incomes_bloc.dart';
+
+Future<void> updateIncome(
+    BuildContext context, Income income, String categoryId) {
   return showDialog(
       context: context,
       builder: (ctx) {
-        TextEditingController expenseAmountController = TextEditingController();
-        TextEditingController expenseNameController = TextEditingController();
+        TextEditingController incomeAmountController = TextEditingController();
+        TextEditingController incomeNameController = TextEditingController();
         bool isLoading = false;
 
         return BlocProvider.value(
-          value: context.read<GetExpensesBloc>(),
+          value: context.read<GetIncomesBloc>(),
           child: StatefulBuilder(builder: (ctx, setState) {
-            return BlocListener<GetExpensesBloc, GetExpensesState>(
+            return BlocListener<GetIncomesBloc, GetIncomesState>(
               listener: (context, state) {
-                if (state.status == ExpensesOverviewStatus.success) {
-                } else if (state.status == ExpensesOverviewStatus.loading) {
+                if (state.status == IncomesOverviewStatus.success) {
+                } else if (state.status == IncomesOverviewStatus.loading) {
                   setState(() {
                     isLoading = true;
                   });
-                } else if (state.status == ExpensesOverviewStatus.failure) {
+                } else if (state.status == IncomesOverviewStatus.failure) {
                   setState(() {
                     isLoading = false; // Hide loading indicator
                   });
                   // Show an error message
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Failed to update expense'),
+                      content: Text('Failed to update income'),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -38,7 +39,7 @@ Future<void> updateExpense(
               },
               child: AlertDialog(
                 title: const Text(
-                  'Update Expense',
+                  'Update Income',
                 ),
                 content: SizedBox(
                   width: MediaQuery.of(context).size.width,
@@ -51,10 +52,10 @@ Future<void> updateExpense(
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.7,
                         child: TextFormField(
-                          controller: expenseAmountController,
+                          controller: incomeAmountController,
                           decoration: InputDecoration(
                               filled: true,
-                              hintText: ' Rs ${expense.amount}',
+                              hintText: ' Rs ${income.amount}',
                               fillColor: Colors.white,
                               prefixIcon: const Icon(
                                 FontAwesomeIcons.moneyBill1,
@@ -71,9 +72,9 @@ Future<void> updateExpense(
                         height: 32,
                       ),
                       TextFormField(
-                        controller: expenseNameController,
+                        controller: incomeNameController,
                         decoration: InputDecoration(
-                            hintText: expense.name,
+                            hintText: income.name,
                             filled: true,
                             fillColor: Colors.white,
                             prefixIcon: const Icon(
@@ -96,28 +97,27 @@ Future<void> updateExpense(
                             ? const Center(child: CircularProgressIndicator())
                             : TextButton(
                                 onPressed: () {
-                                  if (expenseNameController.text.isEmpty) {
-                                    expenseNameController.text = expense.name;
+                                  if (incomeNameController.text.isEmpty) {
+                                    incomeNameController.text = income.name;
                                   }
-                                  if (expenseAmountController.text.isEmpty) {
-                                    expenseAmountController.text =
-                                        expense.amount.toString();
+                                  if (incomeAmountController.text.isEmpty) {
+                                    incomeAmountController.text =
+                                        income.amount.toString();
                                   }
 
-                                  final updatedExpense = expense.copyWith(
-                                    name: expenseNameController.text,
+                                  final updatedIncome = income.copyWith(
+                                    name: incomeNameController.text,
                                     amount:
-                                        int.parse(expenseAmountController.text),
+                                        int.parse(incomeAmountController.text),
                                   );
 
-                                  context.read<GetExpensesBloc>().add(
-                                      UpdateExpense(
-                                          updatedExpense, categoryId));
+                                  context.read<GetIncomesBloc>().add(
+                                      UpdateIncome(updatedIncome, categoryId));
                                   Navigator.pop(ctx);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content:
-                                          Text('Expense updated successfully.'),
+                                          Text('Income updated successfully.'),
                                       backgroundColor: Colors.green,
                                     ),
                                   );

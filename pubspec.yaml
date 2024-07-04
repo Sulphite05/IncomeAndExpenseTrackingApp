@@ -51,13 +51,15 @@ dependencies:
   flutter_bloc: ^8.1.5
   equatable: ^2.0.5
   uuid: ^4.4.0
-
-
-  expense_repository:
-    path: packages/expense_repository
   
   user_repository:
     path: packages/user_repository
+  
+  expense_repository:
+    path: packages/expense_repository
+  
+  income_repository:
+    path: packages/income_repository
   
 
 dev_dependencies:

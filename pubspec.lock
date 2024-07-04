@@ -407,6 +407,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1+1"
+  income_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/income_repository"
+      relative: true
+    source: path
+    version: "0.0.1"
   intl:
     dependency: "direct main"
     description:

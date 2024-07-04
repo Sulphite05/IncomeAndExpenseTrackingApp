@@ -4,7 +4,7 @@ import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../stats/stats.dart';
+import 'add_expense/stats/stats.dart';
 import 'add_expense/blocs/create_category_bloc/create_category_bloc.dart';
 import 'add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
 import 'add_expense/blocs/get_categories_bloc/bloc/get_categories_bloc.dart';
