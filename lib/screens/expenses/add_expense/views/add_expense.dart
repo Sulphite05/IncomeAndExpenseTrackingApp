@@ -46,7 +46,12 @@ class _AddExpenseState extends State<AddExpense> {
     return BlocListener<CreateExpenseBloc, CreateExpenseState>(
       listener: (context, state) {
         if (state is CreateExpenseSuccess) {
-          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Expense saved successfully.'),
+              backgroundColor: Colors.green,
+            ),
+          );
         } else if (state is CreateExpenseLoading) {
           setState(() {
             isLoading = true;
@@ -305,14 +310,7 @@ class _AddExpenseState extends State<AddExpense> {
                                         .read<CreateExpenseBloc>()
                                         .add(CreateExpense(expense));
 
-                                    // Optionally, show a confirmation message
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content:
-                                            Text('Expense saved successfully.'),
-                                        backgroundColor: Colors.green,
-                                      ),
-                                    );
+                                    Navigator.pop(context);
                                   }
                                 },
                                 style: TextButton.styleFrom(

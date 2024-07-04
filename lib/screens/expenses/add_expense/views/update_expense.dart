@@ -19,7 +19,12 @@ Future<void> updateExpense(
             return BlocListener<GetExpensesBloc, GetExpensesState>(
               listener: (context, state) {
                 if (state.status == ExpensesOverviewStatus.success) {
-                  Navigator.pop(ctx);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Expense updated successfully.'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
                 } else if (state.status == ExpensesOverviewStatus.loading) {
                   setState(() {
                     isLoading = true;
@@ -114,6 +119,8 @@ Future<void> updateExpense(
                                   context.read<GetExpensesBloc>().add(
                                       UpdateExpense(
                                           updatedExpense, categoryId));
+                                  Navigator.pop(ctx);
+                                  
                                 },
                                 style: TextButton.styleFrom(
                                     backgroundColor: Colors.black,
