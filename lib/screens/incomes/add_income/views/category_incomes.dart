@@ -62,7 +62,7 @@ class _CategoryIncomesScreenState extends State<CategoryIncomesScreen> {
                     ),
                     child: Center(
                       child: Image.asset(
-                        'assets/${widget.category.icon}.png',
+                        'assets/incomes/${widget.category.icon}.png',
                         scale: 2,
                         color: Colors.black,
                       ),
@@ -207,7 +207,7 @@ class _CategoryIncomesScreenState extends State<CategoryIncomesScreen> {
                     ),
                     child: Center(
                       child: Image.asset(
-                        'assets/${widget.category.icon}.png',
+                        'assets/incomes/${widget.category.icon}.png',
                         scale: 2,
                         color: Colors.black,
                       ),

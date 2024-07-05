@@ -61,7 +61,7 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                     ),
                     child: Center(
                       child: Image.asset(
-                        'assets/${widget.category.icon}.png',
+                        'assets/expenses/${widget.category.icon}.png',
                         scale: 2,
                         color: Colors.black,
                       ),
@@ -206,7 +206,7 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                     ),
                     child: Center(
                       child: Image.asset(
-                        'assets/${widget.category.icon}.png',
+                        'assets/expenses/${widget.category.icon}.png',
                         scale: 2,
                         color: Colors.black,
                       ),

@@ -144,7 +144,7 @@ class _AddExpenseState extends State<AddExpense> {
                                   color: Colors.grey,
                                 )
                               : Image.asset(
-                                  'assets/${category.icon}.png',
+                                  'assets/expenses/${category.icon}.png',
                                   scale: 2,
                                 ),
                           suffixIcon: IconButton(
@@ -208,7 +208,7 @@ class _AddExpenseState extends State<AddExpense> {
                                     });
                                   },
                                   leading: Image.asset(
-                                    'assets/${state.categories[i].icon}.png',
+                                    'assets/expenses/${state.categories[i].icon}.png',
                                     scale: 2,
                                   ),
                                   title: Text(state.categories[i].name),

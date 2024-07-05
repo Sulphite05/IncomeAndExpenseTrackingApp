@@ -349,7 +349,7 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
                           ),
                         ),
                         Image.asset(
-                          'assets/${category.icon}.png',
+                          'assets/expenses/${category.icon}.png',
                           scale: 2,
                           color: Colors.white,
                         ),

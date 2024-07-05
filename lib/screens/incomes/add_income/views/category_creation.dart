@@ -11,13 +11,18 @@ import '../blocs/create_icategory_bloc/create_icategory_bloc.dart';
 
 Future getCategoryCreation(BuildContext context) {
   List<String> myCategoriesIcons = [
-    'entertainment',
-    'food',
-    'home',
-    'pet',
-    'shopping',
-    'tech',
-    'travel',
+    'bank',
+    'briefcase',
+    'dividend',
+    'freelance',
+    'gift',
+    'handshake',
+    'interest',
+    'paycheck',
+    'pension',
+    'rent',
+    'royalty',
+    'shop',
     'more',
   ];
   return showDialog(
@@ -151,7 +156,7 @@ Future getCategoryCreation(BuildContext context) {
                                                     BorderRadius.circular(12),
                                                 image: DecorationImage(
                                                     image: AssetImage(
-                                                  'assets/${myCategoriesIcons[i]}.png',
+                                                  'assets/incomes/${myCategoriesIcons[i]}.png',
                                                 ))),
                                           ),
                                         );

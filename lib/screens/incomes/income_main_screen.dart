@@ -350,7 +350,7 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
                           ),
                         ),
                         Image.asset(
-                          'assets/${category.icon}.png',
+                          'assets/incomes/${category.icon}.png',
                           scale: 2,
                           color: Colors.white,
                         ),

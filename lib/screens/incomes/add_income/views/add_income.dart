@@ -140,7 +140,7 @@ class _AddIncomeState extends State<AddIncome> {
                                   color: Colors.grey,
                                 )
                               : Image.asset(
-                                  'assets/${category.icon}.png',
+                                  'assets/incomes/${category.icon}.png',
                                   scale: 2,
                                 ),
                           suffixIcon: IconButton(
@@ -203,7 +203,7 @@ class _AddIncomeState extends State<AddIncome> {
                                     });
                                   },
                                   leading: Image.asset(
-                                    'assets/${state.incCategories[i].icon}.png',
+                                    'assets/incomes/${state.incCategories[i].icon}.png',
                                     scale: 2,
                                   ),
                                   title: Text(state.incCategories[i].name),
