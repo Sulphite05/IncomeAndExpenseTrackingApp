@@ -8,9 +8,9 @@ class MonthlyReport {
   MonthlyReport({required this.totalIncome, required this.totalExpense});
 }
 
-Future<MonthlyReport> generateMonthlyReport(String userId, DateTime month) async {
-  DateTime startDate = DateTime(month.year, month.month, 1);
-  DateTime endDate = DateTime(month.year, month.month + 1, 0);
+Future<MonthlyReport> generateMonthlyReport(String userId, int year, int month) async {
+  DateTime startDate = DateTime(year, month, 1);
+  DateTime endDate = DateTime(year, month + 1, 0);
 
   List<ExpenseEntity> expenses =
       await FirebaseExpenseRepo().fetchMonthlyExpenses(userId, startDate, endDate);

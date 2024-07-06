@@ -14,7 +14,6 @@ import '../../blocs/my_user_bloc/my_user_bloc.dart';
 import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
 import '../../blocs/update_user_info_bloc/update_user_info_bloc.dart';
 import '../../report/generate_report.dart';
-import '../../report/report.dart';
 import '../expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 import '../incomes/add_income/blocs/get_icategories_bloc/bloc/get_icategories_bloc.dart';
 import '../incomes/add_income/blocs/get_incomes_bloc/get_incomes_bloc.dart';
@@ -46,10 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
               return FloatingActionButton(
                 onPressed: () async {
                   String userId = state.user!.id;
-                  DateTime month = DateTime.now();
-                  MonthlyReport report =
-                      await generateMonthlyReport(userId, month);
-                  File csvFile = await generateCsvReport(report, userId, month);
+                  int year = DateTime.now().year;
+                  // MonthlyReport report =
+                  //     await generateMonthlyReport(userId, month);
+                  File csvFile = await generateCsvReport(userId, year);
                   String csvContent = await readCsvFileContent(csvFile);
                   Navigator.push(
                     context,

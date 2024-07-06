@@ -4,21 +4,21 @@ import 'package:csv/csv.dart';
 class CsvDisplayPage extends StatelessWidget {
   final String csvContent;
 
-  CsvDisplayPage({super.key, required this.csvContent});
+  const CsvDisplayPage({super.key, required this.csvContent});
 
   List<List<dynamic>> _parseCsvData() {
-    return CsvToListConverter().convert(csvContent);
+    return const CsvToListConverter().convert(csvContent);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('CSV Viewer')),
+      appBar: AppBar(title: const Text('CSV Viewer')),
       body: Builder(
         builder: (context) {
           final data = _parseCsvData();
           if (data.isEmpty) {
-            return Center(child: Text('No data found.'));
+            return const Center(child: Text('No data found.'));
           }
 
           final headers = data.first; // Assuming the first row contains headers
