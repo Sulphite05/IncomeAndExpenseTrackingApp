@@ -9,7 +9,6 @@ import 'add_income/blocs/get_icategories_bloc/bloc/get_icategories_bloc.dart';
 import 'add_income/blocs/get_incomes_bloc/get_incomes_bloc.dart';
 import 'add_income/views/category_incomes.dart';
 
-
 class IncomeMainScreen extends StatefulWidget {
   const IncomeMainScreen({super.key});
 
@@ -18,10 +17,36 @@ class IncomeMainScreen extends StatefulWidget {
 }
 
 class _IncomeMainScreenState extends State<IncomeMainScreen> {
+  Map<String, dynamic> calculateTotalAverageMaxIncome(
+      List<IncCategory> categories) {
+    double total = 0.0;
+    int count = 0;
+    int maxi = 0;
+    String maxIncome = 'None';
+
+    for (var category in categories) {
+      total += category.totalIncomes;
+      count++;
+      if (category.totalIncomes > maxi) {
+        maxi = category.totalIncomes;
+        maxIncome = category.name;
+      }
+    }
+    double average = count > 0 ? total / count : 0.0;
+
+    return {
+      'total': total,
+      'average': double.parse(average.toStringAsFixed(2)),
+      'max': maxIncome,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GetIncCategoriesBloc, GetIncCategoriesState>(
       builder: (context, state) {
+        Map<String, dynamic> totalAvgMax =
+            calculateTotalAverageMaxIncome(state.incCategories);
         return SafeArea(
           child: Padding(
             padding:
@@ -115,7 +140,7 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          'Total Balance',
+                          'Total Income',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -125,9 +150,9 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
                         const SizedBox(
                           height: 12,
                         ),
-                        const Text(
-                          'Rs. 400,000',
-                          style: TextStyle(
+                        Text(
+                          'Rs. ${totalAvgMax['total']}',
+                          style: const TextStyle(
                             fontSize: 40,
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -153,7 +178,7 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
                                       ),
                                       child: const Center(
                                         child: Icon(
-                                          CupertinoIcons.arrow_down,
+                                          CupertinoIcons.arrow_up,
                                           size: 12,
                                           color: Colors.greenAccent,
                                         ),
@@ -162,21 +187,21 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
                                     const SizedBox(
                                       width: 8,
                                     ),
-                                    const Column(
+                                    Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'Income',
+                                        const Text(
+                                          'Max Income Category',
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             color: Colors.white,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                         Text(
-                                          'Rs. 20,000',
-                                          style: TextStyle(
+                                          totalAvgMax['max'],
+                                          style: const TextStyle(
                                             fontSize: 16,
                                             color: Colors.white,
                                             fontWeight: FontWeight.w600,
@@ -197,7 +222,7 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
                                       ),
                                       child: const Center(
                                         child: Icon(
-                                          CupertinoIcons.arrow_down,
+                                          CupertinoIcons.arrow_right,
                                           size: 12,
                                           color: Colors.red,
                                         ),
@@ -206,21 +231,21 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
                                     const SizedBox(
                                       width: 8,
                                     ),
-                                    const Column(
+                                    Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'Expense',
+                                        const Text(
+                                          'Average Income',
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             color: Colors.white,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                         Text(
-                                          'Rs. 15,000',
-                                          style: TextStyle(
+                                          'Rs. ${totalAvgMax['average']}',
+                                          style: const TextStyle(
                                             fontSize: 16,
                                             color: Colors.white,
                                             fontWeight: FontWeight.w600,
@@ -274,9 +299,8 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
                               key: ValueKey(category.categoryId),
                               direction: DismissDirection.endToStart,
                               onDismissed: (direction) {
-                                context
-                                    .read<GetIncCategoriesBloc>()
-                                    .add(DeleteIncCategory(category.categoryId));
+                                context.read<GetIncCategoriesBloc>().add(
+                                    DeleteIncCategory(category.categoryId));
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('${category.name} deleted'),

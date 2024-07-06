@@ -17,10 +17,37 @@ class ExpenseMainScreen extends StatefulWidget {
 }
 
 class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
+  Map<String, dynamic> calculateTotalAverageMaxExpense(
+      List<ExpCategory> categories) {
+    double total = 0.0;
+    int count = 0;
+    int maxi = 0;
+    String maxExpense = '';
+
+    for (var category in categories) {
+      total += category.totalExpenses;
+      count++;
+      if (category.totalExpenses > maxi) {
+        maxi = category.totalExpenses;
+        maxExpense = category.name;
+      }
+    }
+
+    double average = count > 0 ? total / count : 0.0;
+
+    return {
+      'total': total,
+      'average': double.parse(average.toStringAsFixed(2)),
+      'max': maxExpense,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
       builder: (context, state) {
+        Map<String, dynamic> totalAvgMax =
+            calculateTotalAverageMaxExpense(state.categories);
         return SafeArea(
           child: Padding(
             padding:
@@ -114,7 +141,7 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          'Total Balance',
+                          'Total Expense',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -124,9 +151,9 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
                         const SizedBox(
                           height: 12,
                         ),
-                        const Text(
-                          'Rs. 400,000',
-                          style: TextStyle(
+                        Text(
+                          'Rs. ${totalAvgMax['total']}',
+                          style: const TextStyle(
                             fontSize: 40,
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -152,7 +179,7 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
                                       ),
                                       child: const Center(
                                         child: Icon(
-                                          CupertinoIcons.arrow_down,
+                                          CupertinoIcons.arrow_up,
                                           size: 12,
                                           color: Colors.greenAccent,
                                         ),
@@ -161,21 +188,21 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
                                     const SizedBox(
                                       width: 8,
                                     ),
-                                    const Column(
+                                    Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'Income',
+                                        const Text(
+                                          'Max Expense Category',
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             color: Colors.white,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                         Text(
-                                          'Rs. 20,000',
-                                          style: TextStyle(
+                                          totalAvgMax['max'],
+                                          style: const TextStyle(
                                             fontSize: 16,
                                             color: Colors.white,
                                             fontWeight: FontWeight.w600,
@@ -196,7 +223,7 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
                                       ),
                                       child: const Center(
                                         child: Icon(
-                                          CupertinoIcons.arrow_down,
+                                          CupertinoIcons.arrow_right,
                                           size: 12,
                                           color: Colors.red,
                                         ),
@@ -205,21 +232,21 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
                                     const SizedBox(
                                       width: 8,
                                     ),
-                                    const Column(
+                                    Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'Expense',
+                                        const Text(
+                                          'Average Expense',
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             color: Colors.white,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                         Text(
-                                          'Rs. 15,000',
-                                          style: TextStyle(
+                                          'Rs. ${totalAvgMax['average']}',
+                                          style: const TextStyle(
                                             fontSize: 16,
                                             color: Colors.white,
                                             fontWeight: FontWeight.w600,
