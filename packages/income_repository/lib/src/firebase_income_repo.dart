@@ -215,5 +215,20 @@ Future<void> updateIncome(Income income) async {
       rethrow;
     }
   }
+
+  Future<List<IncomeEntity>> fetchMonthlyIncomes(
+      String userId, DateTime startDate, DateTime endDate) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('incomes')
+        .where('userId', isEqualTo: userId)
+        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+        .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) =>
+            IncomeEntity.fromDocument(doc.data() as Map<String, dynamic>))
+        .toList();
+  }
 }
 

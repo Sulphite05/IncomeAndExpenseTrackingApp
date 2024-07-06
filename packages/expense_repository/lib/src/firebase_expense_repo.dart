@@ -215,69 +215,20 @@ Future<void> updateExpense(Expense expense) async {
       rethrow;
     }
   }
+
+  Future<List<ExpenseEntity>> fetchMonthlyExpenses(
+      String userId, DateTime startDate, DateTime endDate) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('expenses')
+        .where('userId', isEqualTo: userId)
+        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+        .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) =>
+            ExpenseEntity.fromDocument(doc.data() as Map<String, dynamic>))
+        .toList();
+  }
 }
 
-// import 'dart:developer';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:expense_repository/expense_repository.dart';
-
-// class FirebaseExpenseRepo implements ExpenseRepository {
-//   final categoryCollection =
-//       FirebaseFirestore.instance.collection('exp_categories');
-//   final expenseCollection = FirebaseFirestore.instance.collection('expenses');
-
-//   @override
-//   Future<void> createCategory(Category category) async {
-//     try {
-//       await categoryCollection
-//           .doc(category
-//               .categoryId) // adds additional security layer for clarity expenseRepository is an abstract class
-//           .set(category.toEntity().toDocument());
-//     } catch (e) {
-//       log(e.toString());
-//       rethrow;
-//     }
-//   }
-
-//   @override
-//   Future<List<Category>>
-//       getCategory() // adds additional security layer for clarity expenseRepository is an abstract class
-//   async {
-//     try {
-//       return await categoryCollection.get().then((value) => value.docs
-//           .map((e) =>
-//               Category.fromEntity(ExpCategoryEntity.fromDocument(e.data())))
-//           .toList());
-//     } catch (e) {
-//       log(e.toString());
-//       rethrow;
-//     }
-//   }
-
-//   @override
-//   Future<void> createExpense(Expense expense) async {
-//     try {
-//       await expenseCollection
-//           .doc(expense
-//               .expenseId) // adds additional security layer for clarity expenseRepository is an abstract class
-//           .set(expense.toEntity().toDocument());
-//     } catch (e) {
-//       log(e.toString());
-//       rethrow;
-//     }
-//   }
-
-//   @override
-//   Future<List<Expense>>
-//       getExpenses() // adds additional security layer for clarity expenseRepository is an abstract class
-//   async {
-//     try {
-//       return await expenseCollection.get().then((value) => value.docs
-//           .map((e) => Expense.fromEntity(ExpenseEntity.fromDocument(e.data())))
-//           .toList());
-//     } catch (e) {
-//       log(e.toString());
-//       rethrow;
-//     }
-//   }
-// }

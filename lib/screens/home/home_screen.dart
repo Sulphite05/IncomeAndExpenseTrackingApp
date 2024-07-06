@@ -1,14 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:smart_ghr_wali/report/csv_display.dart';
+import 'package:smart_ghr_wali/report/read_csv.dart';
 import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_categories_bloc/bloc/get_categories_bloc.dart';
 import 'package:smart_ghr_wali/screens/expenses/expense_home_screen.dart';
 
 import '../../blocs/my_user_bloc/my_user_bloc.dart';
 import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
 import '../../blocs/update_user_info_bloc/update_user_info_bloc.dart';
+import '../../report/generate_report.dart';
+import '../../report/report.dart';
 import '../expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 import '../incomes/add_income/blocs/get_icategories_bloc/bloc/get_icategories_bloc.dart';
 import '../incomes/add_income/blocs/get_incomes_bloc/get_incomes_bloc.dart';
@@ -38,20 +44,23 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, state) {
             if (state.status == MyUserStatus.success) {
               return FloatingActionButton(
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute<void>(
-                  //     builder: (BuildContext context) =>
-                  //         BlocProvider<CreatePostBloc>(
-                  //       create: (context) => CreatePostBloc(
-                  //           postRepository: FirebasePostRepository()),
-                  //       child: PostScreen(state.user!),
-                  //     ),
-                  //   ),
-                  // );
+                onPressed: () async {
+                  String userId = state.user!.id;
+                  DateTime month = DateTime.now();
+                  MonthlyReport report =
+                      await generateMonthlyReport(userId, month);
+                  File csvFile = await generateCsvReport(report, userId, month);
+                  String csvContent = await readCsvFileContent(csvFile);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CsvDisplayPage(
+                        csvContent: csvContent,
+                      ),
+                    ),
+                  );
                 },
-                child: const Icon(CupertinoIcons.add),
+                child: const Icon(CupertinoIcons.arrow_down_circle_fill),
               );
             } else {
               return const FloatingActionButton(

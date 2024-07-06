@@ -1,5 +1,6 @@
 import 'package:expense_repository/expense_repository.dart';
 import 'package:intl/intl.dart';
+import 'dart:developer' show log;
 
 Map<String, double> aggregateExpensesByDay(List<Expense> expenses) {
   Map<String, double> aggregatedExpenses = {};
@@ -24,6 +25,6 @@ Map<String, double> aggregateExpensesByDay(List<Expense> expenses) {
     }
   }
 
-  print(aggregatedExpenses);
+  log(aggregatedExpenses.toString());
   return aggregatedExpenses;
 }

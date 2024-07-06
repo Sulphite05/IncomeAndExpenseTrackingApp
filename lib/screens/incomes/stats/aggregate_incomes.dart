@@ -1,5 +1,6 @@
 import 'package:income_repository/income_repository.dart';
 import 'package:intl/intl.dart';
+import 'dart:developer' show log;
 
 Map<String, double> aggregateIncomesByDay(List<Income> incomes) {
   Map<String, double> aggregatedIncomes = {};
@@ -24,6 +25,6 @@ Map<String, double> aggregateIncomesByDay(List<Income> incomes) {
     }
   }
 
-  print(aggregatedIncomes);
+  log(aggregatedIncomes.toString());
   return aggregatedIncomes;
 }
