@@ -64,6 +64,9 @@ dependencies:
   income_repository:
     path: packages/income_repository
   
+  note_repository:
+    path: packages/note_repository
+  
 
 dev_dependencies:
   flutter_test:

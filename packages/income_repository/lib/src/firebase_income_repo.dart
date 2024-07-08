@@ -192,7 +192,7 @@ Future<void> updateIncome(Income income) async {
       final incomeSnapshot = await incomeCollection.doc(incomeId).get();
       final incomeData = incomeSnapshot.data();
       if (incomeData == null) {
-        throw Exception('Expense not found');
+        throw Exception('Income not found');
       }
       final income =
           Income.fromEntity(IncomeEntity.fromDocument(incomeData));
