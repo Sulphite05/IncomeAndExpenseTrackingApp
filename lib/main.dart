@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:income_repository/income_repository.dart';
+import 'package:note_repository/note_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import 'app.dart';
 import 'simple_bloc_observer.dart';
@@ -13,5 +14,5 @@ void main() async {
   await Firebase.initializeApp();
   Bloc.observer = SimpleBlocObserver();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(MyApp(FirebaseUserRepository(), FirebaseExpenseRepo(), FirebaseIncomeRepo()));
+  runApp(MyApp(FirebaseUserRepository(), FirebaseExpenseRepo(), FirebaseIncomeRepo(), FirebaseNoteRepo()));
 }
