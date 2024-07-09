@@ -117,7 +117,7 @@ class _NotesMainScreenState extends State<NotesMainScreen> {
                                       context,
                                       MaterialPageRoute<Note?>(
                                         builder: (BuildContext context) =>
-                                            NewNoteScreen(
+                                            NoteViewScreen(
                                           note: note,
                                         ),
                                       ),
@@ -144,7 +144,7 @@ class _NotesMainScreenState extends State<NotesMainScreen> {
               await Navigator.push(
                 context,
                 MaterialPageRoute<Note?>(
-                  builder: (BuildContext context) => const NewNoteScreen(),
+                  builder: (BuildContext context) => const NoteViewScreen(),
                 ),
               );
               if (!context.mounted) return;
