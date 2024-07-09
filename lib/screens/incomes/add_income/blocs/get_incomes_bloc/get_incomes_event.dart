@@ -9,16 +9,19 @@ sealed class GetIncomesEvent extends Equatable {
 
 class GetIncomes extends GetIncomesEvent {
   final String? incCategoryId;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
-  const GetIncomes({this.incCategoryId});
+  const GetIncomes({this.incCategoryId, this.startDate, this.endDate});
 
   @override
-  List<Object?> get props => [incCategoryId];
+  List<Object?> get props => [incCategoryId, startDate, endDate];
 }
 
 class DeleteIncome extends GetIncomesEvent {
   final String incomeId;
   final String incCategoryId;
+  
 
   const DeleteIncome(this.incomeId, this.incCategoryId);
 

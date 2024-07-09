@@ -1,9 +1,9 @@
-part of 'get_notes_bloc.dart';
+part of 'notes_bloc.dart';
 
 enum NotesOverviewStatus { initial, loading, success, failure }
 
-class GetNotesState extends Equatable {
-  const GetNotesState({
+class NotesState extends Equatable {
+  const NotesState({
     this.status = NotesOverviewStatus.initial,
     this.notes = const [],
   });
@@ -11,11 +11,11 @@ class GetNotesState extends Equatable {
   final NotesOverviewStatus status;
   final List<Note> notes;
 
-  GetNotesState copyWith({
+  NotesState copyWith({
     NotesOverviewStatus Function()? status,
     List<Note> Function()? notes,
   }) {
-    return GetNotesState(
+    return NotesState(
       status: status != null ? status() : this.status,
       notes: notes != null ? notes() : this.notes,
     );
@@ -27,4 +27,3 @@ class GetNotesState extends Equatable {
         notes,
       ];
 }
-

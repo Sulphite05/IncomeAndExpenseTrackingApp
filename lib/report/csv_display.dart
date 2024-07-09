@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:csv/csv.dart';
 
 class CsvDisplayPage extends StatelessWidget {
+  final String name;
   final String csvContent;
 
-  const CsvDisplayPage({super.key, required this.csvContent});
+  const CsvDisplayPage(
+      {super.key, required this.name, required this.csvContent});
 
   List<List<dynamic>> _parseCsvData() {
     return const CsvToListConverter().convert(csvContent);
@@ -13,7 +15,7 @@ class CsvDisplayPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('CSV Viewer')),
+      appBar: AppBar(title: Text("$name's Report Viewer")),
       body: Builder(
         builder: (context) {
           final data = _parseCsvData();

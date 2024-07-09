@@ -1,73 +1,90 @@
 import 'package:note_repository/note_repository.dart';
 
-class Note{
+class Note {
   final String noteId;
-  final String userId; // Add userId field
+  final String userId;
+  final String title;
   final String text;
-  final DateTime date;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   const Note({
     required this.noteId,
     required this.userId, // Add userId to the constructor
     required this.text,
-    required this.date,
+    required this.title,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   Note.empty(this.noteId)
       : userId = '',
         text = '',
-        date = DateTime.now();
+        title = '',
+        createdAt = DateTime.now(),
+        updatedAt = DateTime.now();
 
   NoteEntity toEntity() {
     return NoteEntity(
       noteId: noteId,
       userId: userId, // Pass userId to NoteEntity
+      title: title,
       text: text,
-      date: date,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     );
   }
 
   static Note fromEntity(NoteEntity entity) {
     return Note(
       noteId: entity.noteId,
-      userId: entity.userId, // Assign userId from NoteEntity
+      userId: entity.userId, // Pass userId to NoteEntity
+      title: entity.title,
       text: entity.text,
-      date: entity.date,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
     );
   }
 
   @override
   String toString() {
-    return 'Note(noteId: $noteId, userId: $userId, text: $text, date: $date)';
+    return 'Note(noteId: $noteId, userId: $userId, text: $text, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Note&&
+    return other is Note &&
         other.noteId == noteId &&
         other.userId == userId &&
+        other.title == title &&
         other.text == text &&
-        other.date == date;
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt;
+  
   }
 
   @override
   int get hashCode {
-    return Object.hash(noteId, userId, text, date);
+    return Object.hash(noteId, userId, title, text, createdAt, updatedAt);
   }
 
-  NotecopyWith({
+  Note copyWith({
     String? noteId,
     String? userId,
+    String? title,
     String? text,
-    DateTime? date,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return Note(
-      noteId: noteId ?? this.noteId,
-      userId: userId ?? this.userId,
-      text: text ?? this.text,
-      date: date ?? this.date
-    );
+        noteId: noteId ?? this.noteId,
+        userId: userId ?? this.userId,
+        text: text ?? this.text, 
+        title: title ?? this.title, 
+        updatedAt: updatedAt ?? this.updatedAt, 
+        createdAt: createdAt ?? this.createdAt,
+        );
   }
 }

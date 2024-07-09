@@ -9,11 +9,13 @@ sealed class GetExpensesEvent extends Equatable {
 
 class GetExpenses extends GetExpensesEvent {
   final String? categoryId;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
-  const GetExpenses({this.categoryId});
+  const GetExpenses({this.categoryId, this.startDate, this.endDate});
 
   @override
-  List<Object?> get props => [categoryId];
+  List<Object?> get props => [categoryId, startDate, endDate];
 }
 
 class DeleteExpense extends GetExpensesEvent {

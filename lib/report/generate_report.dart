@@ -10,8 +10,8 @@ Future<File> generateCsvReport(String userId, int year) async {
   ];
 
   for (int monthIndex = 1; monthIndex <= 12; monthIndex++) {
-    MonthlyReport report =
-        await generateMonthlyReport(userId, year, monthIndex);
+    MonthlyReport report = await generateMonthlyReport(
+        userId, year, monthIndex);
     rows.add([
       "$year-$monthIndex",
       report.totalIncome,

@@ -128,13 +128,27 @@ class FirebaseExpenseRepo implements ExpenseRepository {
   }
 
   @override
-  Stream<List<Expense>> getExpenses({String? categoryId}) async* {
+  Stream<List<Expense>> getExpenses(
+      {String? categoryId, DateTime? startDate, DateTime? endDate}) async* {
     try {
       String userId = FirebaseAuth.instance.currentUser!.uid;
 
       if (categoryId != null) {
         yield await expenseCollection
-            .where('categoryId', isEqualTo: categoryId) // Filter by categoryId; won't be available for other users
+            .where('categoryId',
+                isEqualTo:
+                    categoryId) // Filter by categoryId; won't be available for other users
+            .get()
+            .then((value) => value.docs
+                .map((e) =>
+                    Expense.fromEntity(ExpenseEntity.fromDocument(e.data())))
+                .toList());
+      } else if (startDate != null && endDate != null) {
+        yield await expenseCollection
+            .where('userId', isEqualTo: userId)
+            .where('date',
+                isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+            .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
             .get()
             .then((value) => value.docs
                 .map((e) =>
@@ -155,35 +169,41 @@ class FirebaseExpenseRepo implements ExpenseRepository {
     }
   }
 
-@override
-Future<void> updateExpense(Expense expense) async {
-  try {
-    // Get the current expense from the database
-    final expenseSnapshot = await expenseCollection.doc(expense.expenseId).get();
-    final expenseData = expenseSnapshot.data();
-    if (expenseData == null) {
-      throw Exception('Expense not found');
+  @override
+  Future<void> updateExpense(Expense expense) async {
+    try {
+      // Get the current expense from the database
+      final expenseSnapshot =
+          await expenseCollection.doc(expense.expenseId).get();
+      final expenseData = expenseSnapshot.data();
+      if (expenseData == null) {
+        throw Exception('Expense not found');
+      }
+      final currentExpense =
+          Expense.fromEntity(ExpenseEntity.fromDocument(expenseData));
+
+      // Calculate the difference between the new and old expense amounts
+      final amountDifference = expense.amount - currentExpense.amount;
+
+      // Update the category's total amount
+      final categorySnapshot =
+          await categoryCollection.doc(expense.categoryId).get();
+      final categoryData = categorySnapshot.data();
+      if (categoryData != null) {
+        final category = ExpCategory.fromEntity(
+            ExpCategoryEntity.fromDocument(categoryData));
+        category.totalExpenses += amountDifference;
+        await updateCategory(category);
+      }
+
+      // Update the expense in the database
+      await expenseCollection
+          .doc(expense.expenseId)
+          .update(expense.toEntity().toDocument());
+    } catch (e) {
+      log(e.toString());
     }
-    final currentExpense = Expense.fromEntity(ExpenseEntity.fromDocument(expenseData));
-
-    // Calculate the difference between the new and old expense amounts
-    final amountDifference = expense.amount - currentExpense.amount;
-
-    // Update the category's total amount
-    final categorySnapshot = await categoryCollection.doc(expense.categoryId).get();
-    final categoryData = categorySnapshot.data();
-    if (categoryData != null) {
-      final category = ExpCategory.fromEntity(ExpCategoryEntity.fromDocument(categoryData));
-      category.totalExpenses += amountDifference;
-      await updateCategory(category);
-    }
-
-    // Update the expense in the database
-    await expenseCollection.doc(expense.expenseId).update(expense.toEntity().toDocument());
-  } catch (e) {
-    log(e.toString());
   }
-}
 
   @override
   Future<void> deleteExpense(String expenseId) async {
@@ -218,8 +238,7 @@ Future<void> updateExpense(Expense expense) async {
 
   Future<List<ExpenseEntity>> fetchMonthlyExpenses(
       String userId, DateTime startDate, DateTime endDate) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('expenses')
+    QuerySnapshot querySnapshot = await expenseCollection
         .where('userId', isEqualTo: userId)
         .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
         .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
@@ -231,4 +250,3 @@ Future<void> updateExpense(Expense expense) async {
         .toList();
   }
 }
-

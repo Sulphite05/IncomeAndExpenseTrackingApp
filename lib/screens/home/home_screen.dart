@@ -18,6 +18,8 @@ import '../expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
 import '../incomes/add_income/blocs/get_icategories_bloc/bloc/get_icategories_bloc.dart';
 import '../incomes/add_income/blocs/get_incomes_bloc/get_incomes_bloc.dart';
 import '../incomes/income_home_screen.dart';
+import '../notes/blocs/notes_bloc/notes_bloc.dart';
+import '../notes/notes_main_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,14 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () async {
                   String userId = state.user!.id;
                   int year = DateTime.now().year;
-                  // MonthlyReport report =
-                  //     await generateMonthlyReport(userId, month);
                   File csvFile = await generateCsvReport(userId, year);
                   String csvContent = await readCsvFileContent(csvFile);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CsvDisplayPage(
+                        name: state.user!.name,
                         csvContent: csvContent,
                       ),
                     ),
@@ -194,7 +195,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  // ignore: prefer_const_literals_to_create_immutables
                   children: [
                     const Text(""),
                     const Text(
@@ -326,7 +326,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w600,
                           color: Colors.white),
                     ),
-                    Container(
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (context) => NotesBloc(
+                                  noteRepository:
+                                      context.read<NotesBloc>().noteRepository)
+                                ..add(GetNotes()),
+                              child: const NotesMainScreen(),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
                         padding: const EdgeInsets.all(8.0),
                         decoration: const BoxDecoration(
                             shape: BoxShape.circle, color: Colors.white),
@@ -334,7 +349,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           Icons.arrow_right_alt_outlined,
                           size: 25.0,
                           color: Colors.green,
-                        ))
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

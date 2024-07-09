@@ -30,105 +30,108 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
       builder: (context, state) {
         if (state.status == CategoriesOverviewStatus.success) {
           return Scaffold(
-            bottomNavigationBar: ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(30)),
-              child: BottomNavigationBar(
-                onTap: (value) {
-                  setState(() {
-                    index = value;
-                  });
+              bottomNavigationBar: ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(30)),
+                child: BottomNavigationBar(
+                  onTap: (value) {
+                    setState(() {
+                      index = value;
+                    });
+                  },
+                  backgroundColor: Colors.white,
+                  showSelectedLabels: false, // icon labels won't appear
+                  showUnselectedLabels: false,
+                  elevation: 3,
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        CupertinoIcons.home,
+                        color: index == 0 ? selectedItem : unselectedItem,
+                      ),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        CupertinoIcons.graph_square_fill,
+                        color: index == 1 ? selectedItem : unselectedItem,
+                      ),
+                      label: 'Stats',
+                    ),
+                  ],
+                ),
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: FloatingActionButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute<ExpCategory?>(
+                      builder: (BuildContext context) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                            create: (context) => CreateCategoryBloc(
+                                expenseRepository: context
+                                    .read<GetExpensesBloc>()
+                                    .expenseRepository),
+                          ),
+                          BlocProvider(
+                            create: (context) => GetCategoriesBloc(
+                                expenseRepository: context
+                                    .read<GetExpensesBloc>()
+                                    .expenseRepository)
+                              ..add(GetCategories()),
+                          ),
+                          BlocProvider(
+                            create: (context) => CreateExpenseBloc(
+                                expenseRepository: context
+                                    .read<GetExpensesBloc>()
+                                    .expenseRepository),
+                          ),
+                        ],
+                        child: const AddExpense(),
+                      ),
+                    ),
+                  );
+                  if (!context.mounted) return;
+                  context.read<GetCategoriesBloc>().add(GetCategories());
                 },
-                backgroundColor: Colors.white,
-                showSelectedLabels: false, // icon labels won't appear
-                showUnselectedLabels: false,
-                elevation: 3,
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      CupertinoIcons.home,
-                      color: index == 0 ? selectedItem : unselectedItem,
-                    ),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      CupertinoIcons.graph_square_fill,
-                      color: index == 1 ? selectedItem : unselectedItem,
-                    ),
-                    label: 'Stats',
-                  ),
-                ],
+                shape: const CircleBorder(),
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).colorScheme.tertiary,
+                          Theme.of(context).colorScheme.secondary,
+                          Theme.of(context).colorScheme.primary,
+                        ],
+                        transform: const GradientRotation(pi / 4),
+                      ),
+                      shape: BoxShape.circle),
+                  child: const Icon(CupertinoIcons.add),
+                ),
               ),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute<ExpCategory?>(
-                    builder: (BuildContext context) => MultiBlocProvider(
-                      providers: [
-                        BlocProvider(
-                          create: (context) => CreateCategoryBloc(
-                              expenseRepository: context
-                                  .read<GetExpensesBloc>()
-                                  .expenseRepository),
-                        ),
-                        BlocProvider(
-                          create: (context) => GetCategoriesBloc(
-                              expenseRepository: context
-                                  .read<GetExpensesBloc>()
-                                  .expenseRepository)
-                            ..add(GetCategories()),
-                        ),
-                        BlocProvider(
-                          create: (context) => CreateExpenseBloc(
-                              expenseRepository: context
-                                  .read<GetExpensesBloc>()
-                                  .expenseRepository),
-                        ),
-                      ],
-                      child: const AddExpense(),
-                    ),
-                  ),
-                );
-                if (!context.mounted) return;
-                context.read<GetCategoriesBloc>().add(GetCategories());
-              },
-              shape: const CircleBorder(),
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Theme.of(context).colorScheme.tertiary,
-                        Theme.of(context).colorScheme.secondary,
-                        Theme.of(context).colorScheme.primary,
-                      ],
-                      transform: const GradientRotation(pi / 4),
-                    ),
-                    shape: BoxShape.circle),
-                child: const Icon(CupertinoIcons.add),
-              ),
-            ),
-            body: index == 0
-                ? BlocProvider(
-                    create: (context) => GetCategoriesBloc(
-                        expenseRepository:
-                            context.read<GetExpensesBloc>().expenseRepository)
-                      ..add(GetCategories()),
-                    child: const ExpenseMainScreen(),
-                  )
-                : BlocProvider(
-                    create: (context) => GetExpensesBloc(
-                        expenseRepository:
-                            context.read<GetExpensesBloc>().expenseRepository)
-                      ..add(const GetExpenses()),
-                    child: const StatScreen(),
-          ));
+              body: index == 0
+                  ? BlocProvider(
+                      create: (context) => GetCategoriesBloc(
+                          expenseRepository:
+                              context.read<GetExpensesBloc>().expenseRepository)
+                        ..add(GetCategories()),
+                      child: const ExpenseMainScreen(),
+                    )
+                  : BlocProvider(
+                      create: (context) => GetExpensesBloc(
+                          expenseRepository:
+                              context.read<GetExpensesBloc>().expenseRepository)
+                        ..add(GetExpenses(
+                            startDate: DateTime.now()
+                                .subtract(const Duration(days: 7)),
+                            endDate: DateTime.now())),
+                      child: const StatScreen(),
+                    ));
         } else if (state.status == CategoriesOverviewStatus.loading) {
           return const Scaffold(
             body: Center(

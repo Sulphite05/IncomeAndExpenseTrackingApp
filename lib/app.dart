@@ -9,14 +9,16 @@ import 'package:user_repository/user_repository.dart';
 
 import 'app_view.dart';
 import 'screens/incomes/add_income/blocs/get_incomes_bloc/get_incomes_bloc.dart';
-import 'screens/notes/blocs/get_notes_bloc/get_notes_bloc.dart';
+import 'screens/notes/blocs/notes_bloc/notes_bloc.dart';
 
 class MyApp extends StatelessWidget {
   final UserRepository userRepository;
   final ExpenseRepository expenseRepository;
   final IncomeRepository incomeRepository;
   final NoteRepository noteRepository;
-  const MyApp(this.userRepository, this.expenseRepository, this.incomeRepository, this.noteRepository, {super.key});
+  const MyApp(this.userRepository, this.expenseRepository,
+      this.incomeRepository, this.noteRepository,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +34,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<GetIncomesBloc>(
           create: (_) => GetIncomesBloc(incomeRepository: incomeRepository),
         ),
-         RepositoryProvider<GetNotesBloc>(
-          create: (_) => GetNotesBloc(noteRepository: noteRepository),
+        RepositoryProvider<NotesBloc>(
+          create: (_) => NotesBloc(noteRepository: noteRepository),
         )
       ],
       child: const MyAppView(),

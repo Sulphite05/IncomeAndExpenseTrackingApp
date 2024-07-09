@@ -42,6 +42,7 @@ class FirebaseIncomeRepo implements IncomeRepository {
 
   @override
   Stream<List<IncCategory>> getCategories({String? categoryId}) async* {
+    // 2 possibilities... sb fetch krwana hai, koi specific record fetch krwana hai
     try {
       String userId = FirebaseAuth.instance.currentUser!.uid;
       Query query = categoryCollection;
@@ -128,13 +129,29 @@ class FirebaseIncomeRepo implements IncomeRepository {
   }
 
   @override
-  Stream<List<Income>> getIncomes({String? categoryId}) async* {
+  Stream<List<Income>> getIncomes(
+      {String? categoryId, DateTime? startDate, DateTime? endDate}) async* {
     try {
       String userId = FirebaseAuth.instance.currentUser!.uid;
 
       if (categoryId != null) {
         yield await incomeCollection
-            .where('categoryId', isEqualTo: categoryId) // Filter by categoryId; won't be available for other users
+            .where('categoryId',
+                isEqualTo:
+                    categoryId) // Filter by categoryId; won't be available for other users
+            .get()
+            .then((value) => value.docs
+                .map((e) =>
+                    Income.fromEntity(IncomeEntity.fromDocument(e.data())))
+                .toList());
+      } else if (startDate != null && endDate != null) {
+        yield await incomeCollection
+            .where('userId', isEqualTo: userId)
+            .where('date',
+                isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+            .where('date',
+                isLessThanOrEqualTo: Timestamp.fromDate(
+                    endDate)) // Filter by categoryId; won't be available for other users
             .get()
             .then((value) => value.docs
                 .map((e) =>
@@ -155,35 +172,40 @@ class FirebaseIncomeRepo implements IncomeRepository {
     }
   }
 
-@override
-Future<void> updateIncome(Income income) async {
-  try {
-    // Get the current expense from the database
-    final incomeSnapshot = await incomeCollection.doc(income.incomeId).get();
-    final incomeData = incomeSnapshot.data();
-    if (incomeData == null) {
-      throw Exception('Expense not found');
+  @override
+  Future<void> updateIncome(Income income) async {
+    try {
+      // Get the current expense from the database
+      final incomeSnapshot = await incomeCollection.doc(income.incomeId).get();
+      final incomeData = incomeSnapshot.data();
+      if (incomeData == null) {
+        throw Exception('Expense not found');
+      }
+      final currentIncome =
+          Income.fromEntity(IncomeEntity.fromDocument(incomeData));
+
+      // Calculate the difference between the new and old expense amounts
+      final amountDifference = income.amount - currentIncome.amount;
+
+      // Update the category's total amount
+      final categorySnapshot =
+          await categoryCollection.doc(income.categoryId).get();
+      final categoryData = categorySnapshot.data();
+      if (categoryData != null) {
+        final category = IncCategory.fromEntity(
+            IncCategoryEntity.fromDocument(categoryData));
+        category.totalIncomes += amountDifference;
+        await updateCategory(category);
+      }
+
+      // Update the expense in the database
+      await incomeCollection
+          .doc(income.incomeId)
+          .update(income.toEntity().toDocument());
+    } catch (e) {
+      log(e.toString());
     }
-    final currentIncome = Income.fromEntity(IncomeEntity.fromDocument(incomeData));
-
-    // Calculate the difference between the new and old expense amounts
-    final amountDifference = income.amount - currentIncome.amount;
-
-    // Update the category's total amount
-    final categorySnapshot = await categoryCollection.doc(income.categoryId).get();
-    final categoryData = categorySnapshot.data();
-    if (categoryData != null) {
-      final category = IncCategory.fromEntity(IncCategoryEntity.fromDocument(categoryData));
-      category.totalIncomes += amountDifference;
-      await updateCategory(category);
-    }
-
-    // Update the expense in the database
-    await incomeCollection.doc(income.incomeId).update(income.toEntity().toDocument());
-  } catch (e) {
-    log(e.toString());
   }
-}
 
   @override
   Future<void> deleteIncome(String incomeId) async {
@@ -194,8 +216,7 @@ Future<void> updateIncome(Income income) async {
       if (incomeData == null) {
         throw Exception('Income not found');
       }
-      final income =
-          Income.fromEntity(IncomeEntity.fromDocument(incomeData));
+      final income = Income.fromEntity(IncomeEntity.fromDocument(incomeData));
 
       // Delete the expense
       await incomeCollection.doc(incomeId).delete();
@@ -218,8 +239,7 @@ Future<void> updateIncome(Income income) async {
 
   Future<List<IncomeEntity>> fetchMonthlyIncomes(
       String userId, DateTime startDate, DateTime endDate) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('incomes')
+    QuerySnapshot querySnapshot = await incomeCollection
         .where('userId', isEqualTo: userId)
         .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
         .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
@@ -231,4 +251,3 @@ Future<void> updateIncome(Income income) async {
         .toList();
   }
 }
-

@@ -3,22 +3,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class NoteEntity {
   String noteId;
   String userId; // Add userId field
+  String title;
   String text;
-  DateTime date;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   NoteEntity({
     required this.noteId,
     required this.userId,
+    required this.title,
     required this.text,
-    required this.date,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   Map<String, Object?> toDocument() {
     return {
       'noteId': noteId,
       'userId': userId, // Include userId in the document
+      'title' : title,
       'text': text,
-      'date': Timestamp.fromDate(date), // Convert DateTime to Timestamp
+      'createdAt': Timestamp.fromDate(createdAt), // Convert DateTime to Timestamp
+      'updatedAt': Timestamp.fromDate(updatedAt),
     };
   }
 
@@ -26,8 +32,10 @@ class NoteEntity {
     return NoteEntity(
       noteId: doc['noteId'],
       userId: doc['userId'], // Extract userId from document
+      title: doc['title'],
       text: doc['text'],
-      date: (doc['date'] as Timestamp).toDate(),
+      createdAt: (doc['createdAt'] as Timestamp).toDate(), 
+      updatedAt: (doc['updatedAt'] as Timestamp).toDate(), 
     );
   }
 }

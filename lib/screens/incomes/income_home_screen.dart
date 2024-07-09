@@ -126,7 +126,10 @@ class _IncomeHomeScreenState extends State<IncomeHomeScreen> {
                       create: (context) => GetIncomesBloc(
                           incomeRepository:
                               context.read<GetIncomesBloc>().incomeRepository)
-                        ..add(const GetIncomes()),
+                        ..add(GetIncomes(
+                            startDate: DateTime.now()
+                                .subtract(const Duration(days: 7)),
+                            endDate: DateTime.now())),
                       child: const StatScreen(),
                     ));
         } else if (state.status == IncCategoriesOverviewStatus.loading) {

@@ -15,7 +15,7 @@ abstract class IncomeRepository {
 
   Future<void> createIncome(Income income); // Create
 
-  Stream<List<Income>> getIncomes({String? categoryId}); // Read All
+  Stream<List<Income>> getIncomes({String? categoryId, DateTime? startDate, DateTime? endDate}); // Read All
 
   Future<void> updateIncome(Income income); // Update
 

@@ -233,7 +233,7 @@ Future getCategoryCreation(BuildContext context) {
                           child: isLoading == true
                               ? const Center(child: CircularProgressIndicator())
                               : TextButton(
-                                  onPressed: () {
+                                  onPressed: () {     // create category object
                                     setState(() {
                                       category = IncCategory(
                                           totalIncomes: 0,

@@ -70,7 +70,7 @@ class Expense {
   }
 
   Expense copyWith({
-    String? expenseId,
+    String? expenseId,    // to make it immutable
     String? userId,
     String? categoryId,
     String? name,

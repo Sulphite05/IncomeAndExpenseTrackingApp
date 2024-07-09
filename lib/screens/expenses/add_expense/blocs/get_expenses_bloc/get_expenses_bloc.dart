@@ -24,6 +24,8 @@ class GetExpensesBloc extends Bloc<GetExpensesEvent, GetExpensesState> {
     await emit.forEach<List<Expense>>(
       expenseRepository.getExpenses(
         categoryId: event.categoryId,
+        startDate: event.startDate,
+        endDate: event.endDate,
       ),
       onData: (expenses) => state.copyWith(
         status: () => ExpensesOverviewStatus.success,
