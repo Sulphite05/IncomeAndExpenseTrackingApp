@@ -42,7 +42,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
             signUpRequired = true;
           });
         } else if (state is SignUpFailure) {
-          return;
+          signUpRequired = false;
+          setState(() {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.error),
+                backgroundColor: Colors.red,
+              ),
+            );
+          });
         }
       },
       child: Form(
