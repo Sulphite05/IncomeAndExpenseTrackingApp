@@ -18,7 +18,7 @@ Future<MonthlyReport> generateMonthlyReport(
   List<IncomeEntity> incomes = await FirebaseIncomeRepo()
       .fetchMonthlyIncomes(userId, startDate, endDate);
 
-  int totalIncome = incomes.fold(0, (sum, item) => sum + item.amount);
+  int totalIncome = incomes.fold(0, (sum, item) => sum + item.amount); //aggregation
   int totalExpense = expenses.fold(0, (sum, item) => sum + item.amount);
 
   return MonthlyReport(totalIncome: totalIncome, totalExpense: totalExpense);

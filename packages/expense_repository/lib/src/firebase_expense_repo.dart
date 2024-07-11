@@ -33,7 +33,7 @@ class FirebaseExpenseRepo implements ExpenseRepository {
       // If no existing category matches, proceed to create the new category
       await categoryCollection
           .doc(category.categoryId)
-          .set(category.toEntity().toDocument());
+          .set(category.toEntity().toDocument()); // converts expCategory object to expCategoryEntity so that I can convert this entity to json format for saving in firebase
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -107,7 +107,7 @@ class FirebaseExpenseRepo implements ExpenseRepository {
         throw Exception('Please enter a valid amount.');
       }
 
-      // Update the category's total amount
+      // Update the category's total amount in terms of current expense
       final categorySnapshot =
           await categoryCollection.doc(expense.categoryId).get();
       final categoryData = categorySnapshot.data();
@@ -120,7 +120,7 @@ class FirebaseExpenseRepo implements ExpenseRepository {
 
       await expenseCollection
           .doc(expense.expenseId)
-          .set(expense.toEntity().toDocument()); // Pass userId to toDocument
+          .set(expense.toEntity().toDocument()); 
     } catch (e) {
       log(e.toString());
       rethrow;

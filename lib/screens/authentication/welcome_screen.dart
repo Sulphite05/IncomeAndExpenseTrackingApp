@@ -43,7 +43,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             child: Column(
               children: [
                 const Text(
-                  'Welcome Back !',
+                  'Welcome!',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: kToolbarHeight),

@@ -102,21 +102,37 @@ class _SignInScreenState extends State<SignInScreen> {
                   ? SizedBox(
                       width: MediaQuery.of(context).size.width * 0.9,
                       height: 50,
-                      child: TextButton(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).colorScheme.tertiary,
+                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.primary,
+                            ], // Define your gradient colors here
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                          borderRadius: BorderRadius.circular(60),
+                        ),
+                        child: TextButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               context.read<SignInBloc>().add(SignInRequired(
-                                  emailController.text,
-                                  passwordController.text));
+                                    emailController.text,
+                                    passwordController.text,
+                                  ));
                             }
                           },
                           style: TextButton.styleFrom(
-                              elevation: 3.0,
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(60))),
+                            elevation: 3.0,
+                            backgroundColor: Colors
+                                .transparent, // Make background transparent
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(60),
+                            ),
+                          ),
                           child: const Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 25, vertical: 5),
@@ -124,11 +140,14 @@ class _SignInScreenState extends State<SignInScreen> {
                               'Sign In',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          )),
+                          ),
+                        ),
+                      ),
                     )
                   : const CircularProgressIndicator()
             ],

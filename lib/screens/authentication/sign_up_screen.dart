@@ -229,40 +229,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
               !signUpRequired
                   ? SizedBox(
                       width: MediaQuery.of(context).size.width * 0.5,
-                      child: TextButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              MyUser myUser = MyUser.empty;
-                              myUser = myUser.copyWith(
-                                email: emailController.text,
-                                name: nameController.text,
-                              );
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).colorScheme.tertiary,
+                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.primary,
+                            ], // Define your gradient colors here
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                          borderRadius: BorderRadius.circular(60),
+                        ),
+                        child: TextButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                MyUser myUser = MyUser.empty;
+                                myUser = myUser.copyWith(
+                                  email: emailController.text,
+                                  name: nameController.text,
+                                );
 
-                              setState(() {
-                                context.read<SignUpBloc>().add(SignUpRequired(
-                                    myUser, passwordController.text));
-                              });
-                            }
-                          },
-                          style: TextButton.styleFrom(
-                              elevation: 3.0,
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(60))),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 25, vertical: 5),
-                            child: Text(
-                              'Sign Up',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          )),
+                                setState(() {
+                                  context.read<SignUpBloc>().add(SignUpRequired(
+                                      myUser, passwordController.text));
+                                });
+                              }
+                            },
+                            style: TextButton.styleFrom(
+                                elevation: 3.0,
+                                backgroundColor: Colors.transparent,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(60))),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 25, vertical: 5),
+                              child: Text(
+                                'Sign Up',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            )),
+                      ),
                     )
                   : const CircularProgressIndicator()
             ],
