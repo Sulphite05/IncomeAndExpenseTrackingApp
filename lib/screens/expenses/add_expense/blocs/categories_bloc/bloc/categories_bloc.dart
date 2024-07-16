@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:expense_repository/expense_repository.dart';
 
-part 'get_categories_event.dart';
-part 'get_categories_state.dart';
+part 'categories_event.dart';
+part 'categories_state.dart';
 
 class GetCategoriesBloc extends Bloc<GetCategoriesEvent, GetCategoriesState> {
   GetCategoriesBloc({required this.expenseRepository})

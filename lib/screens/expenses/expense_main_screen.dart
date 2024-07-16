@@ -4,8 +4,8 @@ import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_categories_bloc/bloc/get_categories_bloc.dart';
-import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
+import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/categories_bloc/bloc/categories_bloc.dart';
+import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/expenses_bloc/expenses_bloc.dart';
 
 import 'add_expense/views/category_expenses.dart';
 

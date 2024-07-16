@@ -1,4 +1,4 @@
-part of 'get_expenses_bloc.dart';
+part of 'expenses_bloc.dart';
 
 enum ExpensesOverviewStatus { initial, loading, success, failure }
 

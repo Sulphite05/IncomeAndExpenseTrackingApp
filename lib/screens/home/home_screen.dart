@@ -7,14 +7,14 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smart_ghr_wali/report/csv_display.dart';
 import 'package:smart_ghr_wali/report/read_csv.dart';
-import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_categories_bloc/bloc/get_categories_bloc.dart';
+import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/categories_bloc/bloc/categories_bloc.dart';
 import 'package:smart_ghr_wali/screens/expenses/expense_home_screen.dart';
 
 import '../../blocs/my_user_bloc/my_user_bloc.dart';
 import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
 import '../../blocs/update_user_info_bloc/update_user_info_bloc.dart';
 import '../../report/generate_report.dart';
-import '../expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
+import '../expenses/add_expense/blocs/expenses_bloc/expenses_bloc.dart';
 import '../incomes/add_income/blocs/get_icategories_bloc/bloc/get_icategories_bloc.dart';
 import '../incomes/add_income/blocs/get_incomes_bloc/get_incomes_bloc.dart';
 import '../incomes/income_home_screen.dart';

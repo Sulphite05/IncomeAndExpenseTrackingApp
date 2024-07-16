@@ -1,4 +1,4 @@
-part of 'get_categories_bloc.dart';
+part of 'categories_bloc.dart';
 
 enum CategoriesOverviewStatus { initial, loading, success, failure }
 

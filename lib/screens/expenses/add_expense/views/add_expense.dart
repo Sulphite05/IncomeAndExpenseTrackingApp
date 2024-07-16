@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
+import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/expenses_bloc/expenses_bloc.dart';
 
 import 'package:uuid/uuid.dart';
 
 import '../blocs/create_expense_bloc/create_expense_bloc.dart';
-import '../blocs/get_categories_bloc/bloc/get_categories_bloc.dart';
+import '../blocs/categories_bloc/bloc/categories_bloc.dart';
 import 'category_creation.dart';
 
 class AddExpense extends StatefulWidget {

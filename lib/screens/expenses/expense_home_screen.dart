@@ -7,9 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'add_expense/stats/stats.dart';
 import 'add_expense/blocs/create_category_bloc/create_category_bloc.dart';
 import 'add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
-import 'add_expense/blocs/get_categories_bloc/bloc/get_categories_bloc.dart';
+import 'add_expense/blocs/categories_bloc/bloc/categories_bloc.dart';
 import 'add_expense/views/add_expense.dart';
-import 'add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
+import 'add_expense/blocs/expenses_bloc/expenses_bloc.dart';
 import 'expense_main_screen.dart';
 
 class ExpenseHomeScreen extends StatefulWidget {

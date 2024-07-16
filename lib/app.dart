@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:income_repository/income_repository.dart';
 import 'package:note_repository/note_repository.dart';
 import 'package:smart_ghr_wali/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/get_expenses_bloc/get_expenses_bloc.dart';
+import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/expenses_bloc/expenses_bloc.dart';
 import 'package:user_repository/user_repository.dart';
 
 import 'app_view.dart';
