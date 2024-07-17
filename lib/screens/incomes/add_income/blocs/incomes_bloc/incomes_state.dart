@@ -1,4 +1,4 @@
-part of 'get_incomes_bloc.dart';
+part of 'incomes_bloc.dart';
 
 enum IncomesOverviewStatus { initial, loading, success, failure }
 

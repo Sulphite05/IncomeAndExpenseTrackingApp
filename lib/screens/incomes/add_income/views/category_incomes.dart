@@ -5,7 +5,7 @@ import 'package:income_repository/income_repository.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../components/popup.dart';
-import '../blocs/get_incomes_bloc/get_incomes_bloc.dart';
+import '../blocs/incomes_bloc/incomes_bloc.dart';
 import 'update_income.dart';
 
 class CategoryIncomesScreen extends StatefulWidget {

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:income_repository/income_repository.dart';
 
-import 'add_income/blocs/get_icategories_bloc/bloc/get_icategories_bloc.dart';
-import 'add_income/blocs/get_incomes_bloc/get_incomes_bloc.dart';
+import 'add_income/blocs/icategories_bloc/bloc/icategories_bloc.dart';
+import 'add_income/blocs/incomes_bloc/incomes_bloc.dart';
 import 'add_income/views/category_incomes.dart';
 
 class IncomeMainScreen extends StatefulWidget {

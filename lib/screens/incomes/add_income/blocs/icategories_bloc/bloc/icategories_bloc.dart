@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:income_repository/income_repository.dart';
 
-part 'get_icategories_event.dart';
-part 'get_icategories_state.dart';
+part 'icategories_event.dart';
+part 'icategories_state.dart';
 
 class GetIncCategoriesBloc extends Bloc<GetIncCategoriesEvent, GetIncCategoriesState> {
   GetIncCategoriesBloc({required this.incomeRepository})

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:income_repository/income_repository.dart';
 
-import '../blocs/get_incomes_bloc/get_incomes_bloc.dart';
+import '../blocs/incomes_bloc/incomes_bloc.dart';
 
 Future<void> updateIncome(
     BuildContext context, Income income, String categoryId) {

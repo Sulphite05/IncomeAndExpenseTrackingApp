@@ -9,8 +9,8 @@ import 'package:smart_ghr_wali/screens/incomes/add_income/views/category_creatio
 import 'package:uuid/uuid.dart';
 
 import '../blocs/create_income_bloc/create_income_bloc.dart';
-import '../blocs/get_icategories_bloc/bloc/get_icategories_bloc.dart';
-import '../blocs/get_incomes_bloc/get_incomes_bloc.dart';
+import '../blocs/icategories_bloc/bloc/icategories_bloc.dart';
+import '../blocs/incomes_bloc/incomes_bloc.dart';
 
 class AddIncome extends StatefulWidget {
   const AddIncome({super.key});

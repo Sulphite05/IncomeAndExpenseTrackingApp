@@ -8,7 +8,7 @@ import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/expenses_bloc/
 import 'package:user_repository/user_repository.dart';
 
 import 'app_view.dart';
-import 'screens/incomes/add_income/blocs/get_incomes_bloc/get_incomes_bloc.dart';
+import 'screens/incomes/add_income/blocs/incomes_bloc/incomes_bloc.dart';
 import 'screens/notes/blocs/notes_bloc/notes_bloc.dart';
 
 class MyApp extends StatelessWidget {

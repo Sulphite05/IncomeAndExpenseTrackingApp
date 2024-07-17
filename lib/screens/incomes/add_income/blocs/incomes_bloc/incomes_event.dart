@@ -1,4 +1,4 @@
-part of 'get_incomes_bloc.dart';
+part of 'incomes_bloc.dart';
 
 sealed class GetIncomesEvent extends Equatable {
   const GetIncomesEvent();

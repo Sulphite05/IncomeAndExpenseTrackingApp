@@ -7,9 +7,9 @@ import 'package:income_repository/income_repository.dart';
 import 'package:smart_ghr_wali/screens/incomes/stats/stats.dart';
 import 'add_income/blocs/create_icategory_bloc/create_icategory_bloc.dart';
 import 'add_income/blocs/create_income_bloc/create_income_bloc.dart';
-import 'add_income/blocs/get_icategories_bloc/bloc/get_icategories_bloc.dart';
+import 'add_income/blocs/icategories_bloc/bloc/icategories_bloc.dart';
 import 'add_income/views/add_income.dart';
-import 'add_income/blocs/get_incomes_bloc/get_incomes_bloc.dart';
+import 'add_income/blocs/incomes_bloc/incomes_bloc.dart';
 import 'income_main_screen.dart';
 
 class IncomeHomeScreen extends StatefulWidget {

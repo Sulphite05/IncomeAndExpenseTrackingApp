@@ -1,4 +1,4 @@
-part of 'get_icategories_bloc.dart';
+part of 'icategories_bloc.dart';
 
 sealed class GetIncCategoriesEvent extends Equatable {
   const GetIncCategoriesEvent();

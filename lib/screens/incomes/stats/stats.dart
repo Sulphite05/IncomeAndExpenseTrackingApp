@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart'; // Import the intl package
-import '../add_income/blocs/get_incomes_bloc/get_incomes_bloc.dart';
+import '../add_income/blocs/incomes_bloc/incomes_bloc.dart';
 import 'aggregate_incomes.dart';
 import 'chart.dart';
 
