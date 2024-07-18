@@ -2,8 +2,8 @@ part of 'incomes_bloc.dart';
 
 enum IncomesOverviewStatus { initial, loading, success, failure }
 
-class GetIncomesState extends Equatable {
-  const GetIncomesState({
+class IncomesState extends Equatable {
+  const IncomesState({
     this.status = IncomesOverviewStatus.initial,
     this.incomes = const [],
   });
@@ -11,11 +11,11 @@ class GetIncomesState extends Equatable {
   final IncomesOverviewStatus status;
   final List<Income> incomes;
 
-  GetIncomesState copyWith({
+  IncomesState copyWith({
     IncomesOverviewStatus Function()? status,
     List<Income> Function()? incomes,
   }) {
-    return GetIncomesState(
+    return IncomesState(
       status: status != null ? status() : this.status,
       incomes: incomes != null ? incomes() : this.incomes,
     );

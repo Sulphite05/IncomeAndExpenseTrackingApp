@@ -15,9 +15,9 @@ Future<void> updateIncome(
         bool isLoading = false;
 
         return BlocProvider.value(
-          value: context.read<GetIncomesBloc>(),
+          value: context.read<IncomesBloc>(),
           child: StatefulBuilder(builder: (ctx, setState) {
-            return BlocListener<GetIncomesBloc, GetIncomesState>(
+            return BlocListener<IncomesBloc, IncomesState>(
               listener: (context, state) {
                 if (state.status == IncomesOverviewStatus.success) {
                 } else if (state.status == IncomesOverviewStatus.loading) {
@@ -111,7 +111,7 @@ Future<void> updateIncome(
                                         int.parse(incomeAmountController.text),
                                   );
 
-                                  context.read<GetIncomesBloc>().add(
+                                  context.read<IncomesBloc>().add(
                                       UpdateIncome(updatedIncome, categoryId));
                                   Navigator.pop(ctx);
                                   ScaffoldMessenger.of(context).showSnackBar(

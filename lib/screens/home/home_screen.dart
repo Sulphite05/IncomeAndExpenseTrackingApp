@@ -210,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             builder: (context) => BlocProvider(
                               create: (context) => GetIncCategoriesBloc(
                                   incomeRepository: context
-                                      .read<GetIncomesBloc>()
+                                      .read<IncomesBloc>()
                                       .incomeRepository)
                                 ..add(GetIncCategories()),
                               child: const IncomeHomeScreen(),

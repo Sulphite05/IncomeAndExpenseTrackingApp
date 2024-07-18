@@ -190,7 +190,7 @@ class _AddIncomeState extends State<AddIncome> {
                                       );
                                     });
                                     final categoryStream = context
-                                        .read<GetIncomesBloc>()
+                                        .read<IncomesBloc>()
                                         .incomeRepository
                                         .getCategories(
                                             categoryId: income.categoryId);
@@ -286,7 +286,6 @@ class _AddIncomeState extends State<AddIncome> {
                                             int.parse(amountController.text),
                                       );
                                     });
-
 
                                     context
                                         .read<CreateIncomeBloc>()

@@ -336,9 +336,9 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider(
-              create: (context) => GetIncomesBloc(
+              create: (context) => IncomesBloc(
                   incomeRepository:
-                      context.read<GetIncomesBloc>().incomeRepository)
+                      context.read<IncomesBloc>().incomeRepository)
                 ..add(GetIncomes(incCategoryId: category.categoryId)),
               child: CategoryIncomesScreen(category: category),
             ),

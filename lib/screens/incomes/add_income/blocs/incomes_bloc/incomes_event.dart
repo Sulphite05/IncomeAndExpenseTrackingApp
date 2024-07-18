@@ -1,13 +1,13 @@
 part of 'incomes_bloc.dart';
 
-sealed class GetIncomesEvent extends Equatable {
-  const GetIncomesEvent();
+sealed class IncomesEvent extends Equatable {
+  const IncomesEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class GetIncomes extends GetIncomesEvent {
+class GetIncomes extends IncomesEvent {
   final String? incCategoryId;
   final DateTime? startDate;
   final DateTime? endDate;
@@ -18,10 +18,9 @@ class GetIncomes extends GetIncomesEvent {
   List<Object?> get props => [incCategoryId, startDate, endDate];
 }
 
-class DeleteIncome extends GetIncomesEvent {
+class DeleteIncome extends IncomesEvent {
   final String incomeId;
   final String incCategoryId;
-  
 
   const DeleteIncome(this.incomeId, this.incCategoryId);
 
@@ -29,7 +28,7 @@ class DeleteIncome extends GetIncomesEvent {
   List<Object> get props => [incomeId, incCategoryId];
 }
 
-class UpdateIncome extends GetIncomesEvent {
+class UpdateIncome extends IncomesEvent {
   final Income income;
   final String incCategoryId;
 

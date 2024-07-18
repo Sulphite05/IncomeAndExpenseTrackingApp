@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:income_repository/income_repository.dart';
@@ -32,7 +31,7 @@ class _CategoryIncomesScreenState extends State<CategoryIncomesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetIncomesBloc, GetIncomesState>(
+    return BlocBuilder<IncomesBloc, IncomesState>(
       builder: (context, state) {
         if (state.status == IncomesOverviewStatus.success) {
           return Scaffold(
@@ -143,7 +142,7 @@ class _CategoryIncomesScreenState extends State<CategoryIncomesScreen> {
                                   widget.category.categoryId,
                                 );
                                 if (!context.mounted) return;
-                                context.read<GetIncomesBloc>().add(GetIncomes(
+                                context.read<IncomesBloc>().add(GetIncomes(
                                     incCategoryId: widget.category.categoryId));
                               },
                             ),
@@ -157,7 +156,7 @@ class _CategoryIncomesScreenState extends State<CategoryIncomesScreen> {
                                   bool check = await showDeleteDialog(context);
                                   if (check) {
                                     if (!context.mounted) return;
-                                    context.read<GetIncomesBloc>().add(
+                                    context.read<IncomesBloc>().add(
                                         DeleteIncome(income.incomeId,
                                             widget.category.categoryId));
                                   }

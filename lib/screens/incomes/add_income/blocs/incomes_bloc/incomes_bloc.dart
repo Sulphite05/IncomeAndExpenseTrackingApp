@@ -5,9 +5,8 @@ import 'package:income_repository/income_repository.dart';
 part 'incomes_event.dart';
 part 'incomes_state.dart';
 
-class GetIncomesBloc extends Bloc<GetIncomesEvent, GetIncomesState> {
-  GetIncomesBloc({required this.incomeRepository})
-      : super(const GetIncomesState()) {
+class IncomesBloc extends Bloc<IncomesEvent, IncomesState> {
+  IncomesBloc({required this.incomeRepository}) : super(const IncomesState()) {
     on<GetIncomes>(_onGetIncomes);
     on<DeleteIncome>(_onDeleteIncome);
     on<UpdateIncome>(_onUpdateIncome);
@@ -17,7 +16,7 @@ class GetIncomesBloc extends Bloc<GetIncomesEvent, GetIncomesState> {
 
   Future<void> _onGetIncomes(
     GetIncomes event,
-    Emitter<GetIncomesState> emit,
+    Emitter<IncomesState> emit,
   ) async {
     emit(state.copyWith(status: () => IncomesOverviewStatus.loading));
 
@@ -39,7 +38,7 @@ class GetIncomesBloc extends Bloc<GetIncomesEvent, GetIncomesState> {
 
   Future<void> _onDeleteIncome(
     DeleteIncome event,
-    Emitter<GetIncomesState> emit,
+    Emitter<IncomesState> emit,
   ) async {
     try {
       // Perform the delete operation
@@ -69,7 +68,7 @@ class GetIncomesBloc extends Bloc<GetIncomesEvent, GetIncomesState> {
 
   Future<void> _onUpdateIncome(
     UpdateIncome event,
-    Emitter<GetIncomesState> emit,
+    Emitter<IncomesState> emit,
   ) async {
     try {
       // Perform the update operation

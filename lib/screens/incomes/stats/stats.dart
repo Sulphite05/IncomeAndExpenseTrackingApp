@@ -10,7 +10,7 @@ class StatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetIncomesBloc, GetIncomesState>(
+    return BlocBuilder<IncomesBloc, IncomesState>(
       builder: (context, state) {
         if (state.status == IncomesOverviewStatus.success) {
           final aggregatedIncomes = aggregateIncomesByDay(state.incomes);

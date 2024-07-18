@@ -73,20 +73,20 @@ class _IncomeHomeScreenState extends State<IncomeHomeScreen> {
                           BlocProvider(
                             create: (context) => CreateIncCategoryBloc(
                                 incomeRepository: context
-                                    .read<GetIncomesBloc>()
+                                    .read<IncomesBloc>()
                                     .incomeRepository),
                           ),
                           BlocProvider(
                             create: (context) => GetIncCategoriesBloc(
                                 incomeRepository: context
-                                    .read<GetIncomesBloc>()
+                                    .read<IncomesBloc>()
                                     .incomeRepository)
                               ..add(GetIncCategories()),
                           ),
                           BlocProvider(
                             create: (context) => CreateIncomeBloc(
                                 incomeRepository: context
-                                    .read<GetIncomesBloc>()
+                                    .read<IncomesBloc>()
                                     .incomeRepository),
                           ),
                         ],
@@ -118,14 +118,14 @@ class _IncomeHomeScreenState extends State<IncomeHomeScreen> {
                   ? BlocProvider(
                       create: (context) => GetIncCategoriesBloc(
                           incomeRepository:
-                              context.read<GetIncomesBloc>().incomeRepository)
+                              context.read<IncomesBloc>().incomeRepository)
                         ..add(GetIncCategories()),
                       child: const IncomeMainScreen(),
                     )
                   : BlocProvider(
-                      create: (context) => GetIncomesBloc(
+                      create: (context) => IncomesBloc(
                           incomeRepository:
-                              context.read<GetIncomesBloc>().incomeRepository)
+                              context.read<IncomesBloc>().incomeRepository)
                         ..add(GetIncomes(
                             startDate: DateTime.now()
                                 .subtract(const Duration(days: 7)),
