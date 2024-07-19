@@ -26,7 +26,7 @@ class _IncomeHomeScreenState extends State<IncomeHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetIncCategoriesBloc, GetIncCategoriesState>(
+    return BlocBuilder<IncCategoriesBloc, IncCategoriesState>(
       builder: (context, state) {
         if (state.status == IncCategoriesOverviewStatus.success) {
           return Scaffold(
@@ -77,7 +77,7 @@ class _IncomeHomeScreenState extends State<IncomeHomeScreen> {
                                     .incomeRepository),
                           ),
                           BlocProvider(
-                            create: (context) => GetIncCategoriesBloc(
+                            create: (context) => IncCategoriesBloc(
                                 incomeRepository: context
                                     .read<IncomesBloc>()
                                     .incomeRepository)
@@ -95,7 +95,7 @@ class _IncomeHomeScreenState extends State<IncomeHomeScreen> {
                     ),
                   );
                   if (!context.mounted) return;
-                  context.read<GetIncCategoriesBloc>().add(GetIncCategories());
+                  context.read<IncCategoriesBloc>().add(GetIncCategories());
                 },
                 shape: const CircleBorder(),
                 child: Container(
@@ -116,7 +116,7 @@ class _IncomeHomeScreenState extends State<IncomeHomeScreen> {
               ),
               body: index == 0
                   ? BlocProvider(
-                      create: (context) => GetIncCategoriesBloc(
+                      create: (context) => IncCategoriesBloc(
                           incomeRepository:
                               context.read<IncomesBloc>().incomeRepository)
                         ..add(GetIncCategories()),

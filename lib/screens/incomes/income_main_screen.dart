@@ -43,7 +43,7 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetIncCategoriesBloc, GetIncCategoriesState>(
+    return BlocBuilder<IncCategoriesBloc, IncCategoriesState>(
       builder: (context, state) {
         Map<String, dynamic> totalAvgMax =
             calculateTotalAverageMaxIncome(state.incCategories);
@@ -299,7 +299,7 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
                               key: ValueKey(category.categoryId),
                               direction: DismissDirection.endToStart,
                               onDismissed: (direction) {
-                                context.read<GetIncCategoriesBloc>().add(
+                                context.read<IncCategoriesBloc>().add(
                                     DeleteIncCategory(category.categoryId));
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -345,7 +345,7 @@ class _IncomeMainScreenState extends State<IncomeMainScreen> {
           ),
         );
         setState(() {
-          context.read<GetIncCategoriesBloc>().add(GetIncCategories());
+          context.read<IncCategoriesBloc>().add(GetIncCategories());
         });
       },
       child: Padding(

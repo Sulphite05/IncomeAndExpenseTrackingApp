@@ -66,7 +66,7 @@ class _AddIncomeState extends State<AddIncome> {
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.surface,
           ),
-          body: BlocBuilder<GetIncCategoriesBloc, GetIncCategoriesState>(
+          body: BlocBuilder<IncCategoriesBloc, IncCategoriesState>(
             builder: (context, state) {
               if (state.status == IncCategoriesOverviewStatus.success) {
                 return Padding(
@@ -148,7 +148,7 @@ class _AddIncomeState extends State<AddIncome> {
                               await getCategoryCreation(context);
                               setState(() {
                                 context
-                                    .read<GetIncCategoriesBloc>()
+                                    .read<IncCategoriesBloc>()
                                     .add(GetIncCategories());
                               });
                             },

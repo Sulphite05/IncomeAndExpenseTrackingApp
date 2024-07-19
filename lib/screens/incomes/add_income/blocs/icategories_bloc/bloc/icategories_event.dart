@@ -1,15 +1,15 @@
 part of 'icategories_bloc.dart';
 
-sealed class GetIncCategoriesEvent extends Equatable {
-  const GetIncCategoriesEvent();
+sealed class IncCategoriesEvent extends Equatable {
+  const IncCategoriesEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class GetIncCategories extends GetIncCategoriesEvent {}
+class GetIncCategories extends IncCategoriesEvent {}
 
-class DeleteIncCategory extends GetIncCategoriesEvent {
+class DeleteIncCategory extends IncCategoriesEvent {
   final String categoryId;
 
   const DeleteIncCategory(this.categoryId);

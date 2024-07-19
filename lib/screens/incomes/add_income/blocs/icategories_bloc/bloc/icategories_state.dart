@@ -2,8 +2,8 @@ part of 'icategories_bloc.dart';
 
 enum IncCategoriesOverviewStatus { initial, loading, success, failure }
 
-class GetIncCategoriesState extends Equatable {
-  const GetIncCategoriesState({
+class IncCategoriesState extends Equatable {
+  const IncCategoriesState({
     this.status = IncCategoriesOverviewStatus.initial,
     this.incCategories = const [],
   });
@@ -11,13 +11,14 @@ class GetIncCategoriesState extends Equatable {
   final IncCategoriesOverviewStatus status;
   final List<IncCategory> incCategories;
 
-  GetIncCategoriesState copyWith({
+  IncCategoriesState copyWith({
     IncCategoriesOverviewStatus Function()? status,
     List<IncCategory> Function()? incCategories,
   }) {
-    return GetIncCategoriesState(
+    return IncCategoriesState(
       status: status != null ? status() : this.status,
-      incCategories: incCategories != null ? incCategories() : this.incCategories,
+      incCategories:
+          incCategories != null ? incCategories() : this.incCategories,
     );
   }
 
