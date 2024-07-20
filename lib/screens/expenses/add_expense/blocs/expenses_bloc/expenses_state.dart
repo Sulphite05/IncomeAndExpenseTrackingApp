@@ -2,8 +2,8 @@ part of 'expenses_bloc.dart';
 
 enum ExpensesOverviewStatus { initial, loading, success, failure }
 
-class GetExpensesState extends Equatable {
-  const GetExpensesState({
+class ExpensesState extends Equatable {
+  const ExpensesState({
     this.status = ExpensesOverviewStatus.initial,
     this.expenses = const [],
   });
@@ -11,11 +11,11 @@ class GetExpensesState extends Equatable {
   final ExpensesOverviewStatus status;
   final List<Expense> expenses;
 
-  GetExpensesState copyWith({
+  ExpensesState copyWith({
     ExpensesOverviewStatus Function()? status,
     List<Expense> Function()? expenses,
   }) {
-    return GetExpensesState(
+    return ExpensesState(
       status: status != null ? status() : this.status,
       expenses: expenses != null ? expenses() : this.expenses,
     );

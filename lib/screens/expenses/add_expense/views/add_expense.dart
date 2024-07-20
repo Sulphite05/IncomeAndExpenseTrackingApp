@@ -195,7 +195,7 @@ class _AddExpenseState extends State<AddExpense> {
                                       );
                                     });
                                     final categoryStream = context
-                                        .read<GetExpensesBloc>()
+                                        .read<ExpensesBloc>()
                                         .expenseRepository
                                         .getCategories(
                                             categoryId: expense.categoryId);

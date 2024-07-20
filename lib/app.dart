@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<AuthenticationBloc>(
           create: (_) => AuthenticationBloc(myUserRepository: userRepository),
         ),
-        RepositoryProvider<GetExpensesBloc>(
-          create: (_) => GetExpensesBloc(expenseRepository: expenseRepository),
+        RepositoryProvider<ExpensesBloc>(
+          create: (_) => ExpensesBloc(expenseRepository: expenseRepository),
         ),
         RepositoryProvider<IncomesBloc>(
           create: (_) => IncomesBloc(incomeRepository: incomeRepository),

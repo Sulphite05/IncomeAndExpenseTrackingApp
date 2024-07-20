@@ -1,13 +1,13 @@
 part of 'expenses_bloc.dart';
 
-sealed class GetExpensesEvent extends Equatable {
-  const GetExpensesEvent();
+sealed class ExpensesEvent extends Equatable {
+  const ExpensesEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class GetExpenses extends GetExpensesEvent {
+class GetExpenses extends ExpensesEvent {
   final String? categoryId;
   final DateTime? startDate;
   final DateTime? endDate;
@@ -18,7 +18,7 @@ class GetExpenses extends GetExpensesEvent {
   List<Object?> get props => [categoryId, startDate, endDate];
 }
 
-class DeleteExpense extends GetExpensesEvent {
+class DeleteExpense extends ExpensesEvent {
   final String expenseId;
   final String categoryId;
 
@@ -28,7 +28,7 @@ class DeleteExpense extends GetExpensesEvent {
   List<Object> get props => [expenseId, categoryId];
 }
 
-class UpdateExpense extends GetExpensesEvent {
+class UpdateExpense extends ExpensesEvent {
   final Expense expense;
   final String categoryId;
 

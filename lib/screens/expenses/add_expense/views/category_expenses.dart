@@ -31,7 +31,7 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetExpensesBloc, GetExpensesState>(
+    return BlocBuilder<ExpensesBloc, ExpensesState>(
       builder: (context, state) {
         if (state.status == ExpensesOverviewStatus.success) {
           return Scaffold(
@@ -142,7 +142,7 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                                   widget.category.categoryId,
                                 );
                                 if (!context.mounted) return;
-                                context.read<GetExpensesBloc>().add(GetExpenses(
+                                context.read<ExpensesBloc>().add(GetExpenses(
                                     categoryId: widget.category.categoryId));
                               },
                             ),
@@ -156,7 +156,7 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                                   bool check = await showDeleteDialog(context);
                                   if (check) {
                                     if (!context.mounted) return;
-                                    context.read<GetExpensesBloc>().add(
+                                    context.read<ExpensesBloc>().add(
                                         DeleteExpense(expense.expenseId,
                                             widget.category.categoryId));
                                   }

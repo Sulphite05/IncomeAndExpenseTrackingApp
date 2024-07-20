@@ -10,7 +10,7 @@ class StatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetExpensesBloc, GetExpensesState>(
+    return BlocBuilder<ExpensesBloc, ExpensesState>(
       builder: (context, state) {
         if (state.status == ExpensesOverviewStatus.success) {
           final aggregatedExpenses = aggregateExpensesByDay(state.expenses);

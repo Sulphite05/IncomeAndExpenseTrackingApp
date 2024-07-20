@@ -14,9 +14,9 @@ Future<void> updateExpense(
         bool isLoading = false;
 
         return BlocProvider.value(
-          value: context.read<GetExpensesBloc>(),
+          value: context.read<ExpensesBloc>(),
           child: StatefulBuilder(builder: (ctx, setState) {
-            return BlocListener<GetExpensesBloc, GetExpensesState>(
+            return BlocListener<ExpensesBloc, ExpensesState>(
               listener: (context, state) {
                 if (state.status == ExpensesOverviewStatus.success) {
                 } else if (state.status == ExpensesOverviewStatus.loading) {
@@ -110,7 +110,7 @@ Future<void> updateExpense(
                                         int.parse(expenseAmountController.text),
                                   );
 
-                                  context.read<GetExpensesBloc>().add(
+                                  context.read<ExpensesBloc>().add(
                                       UpdateExpense(
                                           updatedExpense, categoryId));
                                   Navigator.pop(ctx);

@@ -271,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             builder: (context) => BlocProvider(
                               create: (context) => GetCategoriesBloc(
                                   expenseRepository: context
-                                      .read<GetExpensesBloc>()
+                                      .read<ExpensesBloc>()
                                       .expenseRepository)
                                 ..add(GetCategories()),
                               child: const ExpenseHomeScreen(),

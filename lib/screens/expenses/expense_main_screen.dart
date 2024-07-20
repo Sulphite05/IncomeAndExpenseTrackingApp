@@ -338,9 +338,9 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider(
-              create: (context) => GetExpensesBloc(
+              create: (context) => ExpensesBloc(
                   expenseRepository:
-                      context.read<GetExpensesBloc>().expenseRepository)
+                      context.read<ExpensesBloc>().expenseRepository)
                 ..add(GetExpenses(categoryId: category.categoryId)),
               child: CategoryExpensesScreen(category: category),
             ),

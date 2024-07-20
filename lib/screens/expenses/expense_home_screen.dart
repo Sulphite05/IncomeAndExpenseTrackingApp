@@ -73,20 +73,20 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                           BlocProvider(
                             create: (context) => CreateCategoryBloc(
                                 expenseRepository: context
-                                    .read<GetExpensesBloc>()
+                                    .read<ExpensesBloc>()
                                     .expenseRepository),
                           ),
                           BlocProvider(
                             create: (context) => GetCategoriesBloc(
                                 expenseRepository: context
-                                    .read<GetExpensesBloc>()
+                                    .read<ExpensesBloc>()
                                     .expenseRepository)
                               ..add(GetCategories()),
                           ),
                           BlocProvider(
                             create: (context) => CreateExpenseBloc(
                                 expenseRepository: context
-                                    .read<GetExpensesBloc>()
+                                    .read<ExpensesBloc>()
                                     .expenseRepository),
                           ),
                         ],
@@ -118,14 +118,14 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                   ? BlocProvider(
                       create: (context) => GetCategoriesBloc(
                           expenseRepository:
-                              context.read<GetExpensesBloc>().expenseRepository)
+                              context.read<ExpensesBloc>().expenseRepository)
                         ..add(GetCategories()),
                       child: const ExpenseMainScreen(),
                     )
                   : BlocProvider(
-                      create: (context) => GetExpensesBloc(
+                      create: (context) => ExpensesBloc(
                           expenseRepository:
-                              context.read<GetExpensesBloc>().expenseRepository)
+                              context.read<ExpensesBloc>().expenseRepository)
                         ..add(GetExpenses(
                             startDate: DateTime.now()
                                 .subtract(const Duration(days: 7)),
