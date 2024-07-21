@@ -269,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => BlocProvider(
-                              create: (context) => GetCategoriesBloc(
+                              create: (context) => CategoriesBloc(
                                   expenseRepository: context
                                       .read<ExpensesBloc>()
                                       .expenseRepository)

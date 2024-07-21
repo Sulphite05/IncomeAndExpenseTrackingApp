@@ -26,7 +26,7 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
+    return BlocBuilder<CategoriesBloc, CategoriesState>(
       builder: (context, state) {
         if (state.status == CategoriesOverviewStatus.success) {
           return Scaffold(
@@ -77,7 +77,7 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                                     .expenseRepository),
                           ),
                           BlocProvider(
-                            create: (context) => GetCategoriesBloc(
+                            create: (context) => CategoriesBloc(
                                 expenseRepository: context
                                     .read<ExpensesBloc>()
                                     .expenseRepository)
@@ -95,7 +95,7 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                     ),
                   );
                   if (!context.mounted) return;
-                  context.read<GetCategoriesBloc>().add(GetCategories());
+                  context.read<CategoriesBloc>().add(GetCategories());
                 },
                 shape: const CircleBorder(),
                 child: Container(
@@ -116,7 +116,7 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
               ),
               body: index == 0
                   ? BlocProvider(
-                      create: (context) => GetCategoriesBloc(
+                      create: (context) => CategoriesBloc(
                           expenseRepository:
                               context.read<ExpensesBloc>().expenseRepository)
                         ..add(GetCategories()),

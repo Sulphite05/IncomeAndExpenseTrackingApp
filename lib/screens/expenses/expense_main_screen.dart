@@ -44,7 +44,7 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
+    return BlocBuilder<CategoriesBloc, CategoriesState>(
       builder: (context, state) {
         Map<String, dynamic> totalAvgMax =
             calculateTotalAverageMaxExpense(state.categories);
@@ -301,7 +301,7 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
                               direction: DismissDirection.endToStart,
                               onDismissed: (direction) {
                                 context
-                                    .read<GetCategoriesBloc>()
+                                    .read<CategoriesBloc>()
                                     .add(DeleteCategory(category.categoryId));
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -347,7 +347,7 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
           ),
         );
         setState(() {
-          context.read<GetCategoriesBloc>().add(GetCategories());
+          context.read<CategoriesBloc>().add(GetCategories());
         });
       },
       child: Padding(

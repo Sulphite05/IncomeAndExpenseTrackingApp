@@ -5,9 +5,9 @@ import 'package:expense_repository/expense_repository.dart';
 part 'categories_event.dart';
 part 'categories_state.dart';
 
-class GetCategoriesBloc extends Bloc<GetCategoriesEvent, GetCategoriesState> {
-  GetCategoriesBloc({required this.expenseRepository})
-      : super(const GetCategoriesState()) {
+class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
+  CategoriesBloc({required this.expenseRepository})
+      : super(const CategoriesState()) {
     on<GetCategories>(_onGetCategories);
     on<DeleteCategory>(_onDeleteCategory);
   }
@@ -16,7 +16,7 @@ class GetCategoriesBloc extends Bloc<GetCategoriesEvent, GetCategoriesState> {
 
   Future<void> _onGetCategories(
     GetCategories event,
-    Emitter<GetCategoriesState> emit,
+    Emitter<CategoriesState> emit,
   ) async {
     emit(state.copyWith(status: () => CategoriesOverviewStatus.loading));
 
@@ -32,9 +32,9 @@ class GetCategoriesBloc extends Bloc<GetCategoriesEvent, GetCategoriesState> {
     );
   }
 
-    Future<void> _onDeleteCategory(
+  Future<void> _onDeleteCategory(
     DeleteCategory event,
-    Emitter<GetCategoriesState> emit,
+    Emitter<CategoriesState> emit,
   ) async {
     try {
       // Perform the delete operation
@@ -43,7 +43,8 @@ class GetCategoriesBloc extends Bloc<GetCategoriesEvent, GetCategoriesState> {
 
       // Fetch updated list of expenses from the stream
       await emit.forEach<List<ExpCategory>>(
-        expenseRepository.getCategories(), // Use the Stream returned by getExpenses
+        expenseRepository
+            .getCategories(), // Use the Stream returned by getExpenses
         onData: (categories) => state.copyWith(
           status: () => CategoriesOverviewStatus.success,
           categories: () => categories,
@@ -59,5 +60,3 @@ class GetCategoriesBloc extends Bloc<GetCategoriesEvent, GetCategoriesState> {
     }
   }
 }
-
-

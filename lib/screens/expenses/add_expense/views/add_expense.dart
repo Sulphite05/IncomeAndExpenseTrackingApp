@@ -70,7 +70,7 @@ class _AddExpenseState extends State<AddExpense> {
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.surface,
           ),
-          body: BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
+          body: BlocBuilder<CategoriesBloc, CategoriesState>(
             builder: (context, state) {
               if (state.status == CategoriesOverviewStatus.success) {
                 return Padding(
@@ -152,7 +152,7 @@ class _AddExpenseState extends State<AddExpense> {
                               await getCategoryCreation(context);
                               setState(() {
                                 context
-                                    .read<GetCategoriesBloc>()
+                                    .read<CategoriesBloc>()
                                     .add(GetCategories());
                               });
                             },
