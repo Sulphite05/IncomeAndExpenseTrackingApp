@@ -7,6 +7,15 @@ sealed class CategoriesEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class CreateCategory extends CategoriesEvent {
+  final ExpCategory category;
+
+  const CreateCategory(this.category);
+
+  @override
+  List<Object> get props => [category];
+}
+
 class GetCategories extends CategoriesEvent {}
 
 class DeleteCategory extends CategoriesEvent {

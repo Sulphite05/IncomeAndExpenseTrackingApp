@@ -10,9 +10,38 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
       : super(const CategoriesState()) {
     on<GetCategories>(_onGetCategories);
     on<DeleteCategory>(_onDeleteCategory);
+    on<CreateCategory>(_onCreateCategory);
   }
 
   final ExpenseRepository expenseRepository;
+
+  Future<void> _onCreateCategory(
+    CreateCategory event,
+    Emitter<CategoriesState> emit,
+  ) async {
+    try {
+      // Perform the delete operation
+      await expenseRepository
+          .createCategory(event.category); // delete only required expense
+
+      // Fetch updated list of expenses from the stream
+      await emit.forEach<List<ExpCategory>>(
+        expenseRepository
+            .getCategories(), // Use the Stream returned by getExpenses
+        onData: (categories) => state.copyWith(
+          status: () => CategoriesOverviewStatus.success,
+          categories: () => categories,
+        ),
+        onError: (_, __) => state.copyWith(
+          status: () => CategoriesOverviewStatus.failure,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        status: () => CategoriesOverviewStatus.failure,
+      ));
+    }
+  }
 
   Future<void> _onGetCategories(
     GetCategories event,
