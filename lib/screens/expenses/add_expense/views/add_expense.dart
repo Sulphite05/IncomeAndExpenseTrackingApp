@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_ghr_wali/screens/expenses/add_expense/blocs/expenses_bloc/expenses_bloc.dart';
-
+import 'package:smart_ghr_wali/screens/notes/blocs/notes_bloc/notes_bloc.dart';
 import 'package:uuid/uuid.dart';
 
-import '../blocs/create_expense_bloc/create_expense_bloc.dart';
+
 import '../blocs/categories_bloc/bloc/categories_bloc.dart';
+import '../blocs/expenses_bloc/expenses_bloc.dart';
 import 'category_creation.dart';
 
 class AddExpense extends StatefulWidget {
@@ -43,19 +43,19 @@ class _AddExpenseState extends State<AddExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CreateExpenseBloc, CreateExpenseState>(
+    return BlocListener<ExpensesBloc, ExpensesState>(
       listener: (context, state) {
-        if (state is CreateExpenseSuccess) {
-        } else if (state is CreateExpenseLoading) {
+        if (state.status == ExpensesOverviewStatus.success) {
+        } else if (state.status == ExpensesOverviewStatus.loading) {
           setState(() {
             isLoading = true;
           });
-        } else if (state is CreateExpenseFailure) {
+        } else if (state.status == ExpensesOverviewStatus.failure) {
           setState(() {
             isLoading = false; // Hide loading indicator
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Failed to create expense ${state.error}'),
+              const SnackBar(
+                content: Text('Failed to create expense'),
                 backgroundColor: Colors.red,
               ),
             );
@@ -301,7 +301,7 @@ class _AddExpenseState extends State<AddExpense> {
 
                                     // Add the new expense
                                     context
-                                        .read<CreateExpenseBloc>()
+                                        .read<ExpensesBloc>()
                                         .add(CreateExpense(expense));
 
                                     Navigator.pop(context);

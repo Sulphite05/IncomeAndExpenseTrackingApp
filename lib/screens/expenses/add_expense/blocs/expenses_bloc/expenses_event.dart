@@ -7,6 +7,15 @@ sealed class ExpensesEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class CreateExpense extends ExpensesEvent {
+  final Expense expense;
+
+  const CreateExpense(this.expense);
+
+  @override
+  List<Object> get props => [expense];
+}
+
 class GetExpenses extends ExpensesEvent {
   final String? categoryId;
   final DateTime? startDate;

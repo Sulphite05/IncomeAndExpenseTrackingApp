@@ -8,12 +8,41 @@ part 'expenses_state.dart';
 class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   ExpensesBloc({required this.expenseRepository})
       : super(const ExpensesState()) {
+    on<CreateExpense>(_onCreateExpense);
     on<GetExpenses>(_onGetExpenses);
     on<DeleteExpense>(_onDeleteExpense);
     on<UpdateExpense>(_onUpdateExpense);
   }
 
   final ExpenseRepository expenseRepository;
+
+  Future<void> _onCreateExpense(
+    CreateExpense event,
+    Emitter<ExpensesState> emit,
+  ) async {
+    try {
+      // Perform the delete operation
+      await expenseRepository
+          .createExpense(event.expense); // delete only required expense
+
+      // Fetch updated list of expenses from the stream
+      await emit.forEach<List<Expense>>(
+        expenseRepository
+            .getExpenses(), // Use the Stream returned by getExpenses
+        onData: (expenses) => state.copyWith(
+          status: () => ExpensesOverviewStatus.success,
+          expenses: () => expenses,
+        ),
+        onError: (_, __) => state.copyWith(
+          status: () => ExpensesOverviewStatus.failure,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        status: () => ExpensesOverviewStatus.failure,
+      ));
+    }
+  }
 
   Future<void> _onGetExpenses(
     GetExpenses event,
