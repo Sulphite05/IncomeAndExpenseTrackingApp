@@ -7,6 +7,15 @@ sealed class IncCategoriesEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class CreateIncCategory extends IncCategoriesEvent {
+  final IncCategory incCategory;
+
+  const CreateIncCategory(this.incCategory);
+
+  @override
+  List<Object> get props => [incCategory];
+}
+
 class GetIncCategories extends IncCategoriesEvent {}
 
 class DeleteIncCategory extends IncCategoriesEvent {

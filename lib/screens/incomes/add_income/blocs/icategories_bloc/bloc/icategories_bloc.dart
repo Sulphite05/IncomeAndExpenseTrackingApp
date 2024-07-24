@@ -8,8 +8,37 @@ part 'icategories_state.dart';
 class IncCategoriesBloc extends Bloc<IncCategoriesEvent, IncCategoriesState> {
   IncCategoriesBloc({required this.incomeRepository})
       : super(const IncCategoriesState()) {
+    on<CreateIncCategory>(_onCreateIncCategory);
     on<GetIncCategories>(_onGetIncCategories);
     on<DeleteIncCategory>(_onDeleteIncCategory);
+  }
+
+  Future<void> _onCreateIncCategory(
+    CreateIncCategory event,
+    Emitter<IncCategoriesState> emit,
+  ) async {
+    try {
+      // Perform the delete operation
+      await incomeRepository
+          .createCategory(event.incCategory); // delete only required expense
+
+      // Fetch updated list of expenses from the stream
+      await emit.forEach<List<IncCategory>>(
+        incomeRepository
+            .getCategories(), // Use the Stream returned by getExpenses
+        onData: (incCategories) => state.copyWith(
+          status: () => IncCategoriesOverviewStatus.success,
+          incCategories: () => incCategories,
+        ),
+        onError: (_, __) => state.copyWith(
+          status: () => IncCategoriesOverviewStatus.failure,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        status: () => IncCategoriesOverviewStatus.failure,
+      ));
+    }
   }
 
   final IncomeRepository incomeRepository;
