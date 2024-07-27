@@ -7,12 +7,41 @@ part 'incomes_state.dart';
 
 class IncomesBloc extends Bloc<IncomesEvent, IncomesState> {
   IncomesBloc({required this.incomeRepository}) : super(const IncomesState()) {
+    on<CreateIncome>(_onCreateIncome);
     on<GetIncomes>(_onGetIncomes);
     on<DeleteIncome>(_onDeleteIncome);
     on<UpdateIncome>(_onUpdateIncome);
   }
 
   final IncomeRepository incomeRepository;
+
+  Future<void> _onCreateIncome(
+    CreateIncome event,
+    Emitter<IncomesState> emit,
+  ) async {
+    try {
+      // Perform the delete operation
+      await incomeRepository
+          .createIncome(event.income); // delete only required expense
+
+      // Fetch updated list of expenses from the stream
+      await emit.forEach<List<Income>>(
+        incomeRepository.getIncomes(// store back expenses of the same category
+            ), // Use the Stream returned by getIncomes
+        onData: (incomes) => state.copyWith(
+          status: () => IncomesOverviewStatus.success,
+          incomes: () => incomes,
+        ),
+        onError: (_, __) => state.copyWith(
+          status: () => IncomesOverviewStatus.failure,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        status: () => IncomesOverviewStatus.failure,
+      ));
+    }
+  }
 
   Future<void> _onGetIncomes(
     GetIncomes event,

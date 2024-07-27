@@ -4,11 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:income_repository/income_repository.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_ghr_wali/screens/incomes/add_income/views/category_creation.dart';
 
 import 'package:uuid/uuid.dart';
 
-import '../blocs/create_income_bloc/create_income_bloc.dart';
+import '../../../expenses/add_expense/views/category_creation.dart';
 import '../blocs/icategories_bloc/bloc/icategories_bloc.dart';
 import '../blocs/incomes_bloc/incomes_bloc.dart';
 
@@ -39,19 +38,19 @@ class _AddIncomeState extends State<AddIncome> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CreateIncomeBloc, CreateIncomeState>(
+    return BlocListener<IncomesBloc, IncomesState>(
       listener: (context, state) {
-        if (state is CreateIncomeSuccess) {
-        } else if (state is CreateIncomeLoading) {
+        if (state.status == IncomesOverviewStatus.success) {
+        } else if (state.status == IncomesOverviewStatus.loading) {
           setState(() {
             isLoading = true;
           });
-        } else if (state is CreateIncomeFailure) {
+        } else if (state.status == IncomesOverviewStatus.failure) {
           setState(() {
             isLoading = false; // Hide loading indicator
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Failed to create Income ${state.error}'),
+                content: Text('Failed to create Income ${state}'),
                 backgroundColor: Colors.red,
               ),
             );
@@ -288,7 +287,7 @@ class _AddIncomeState extends State<AddIncome> {
                                     });
 
                                     context
-                                        .read<CreateIncomeBloc>()
+                                        .read<IncomesBloc>()
                                         .add(CreateIncome(income));
 
                                     Navigator.pop(context);
