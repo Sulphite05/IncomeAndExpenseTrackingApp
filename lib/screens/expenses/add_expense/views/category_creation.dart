@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:uuid/uuid.dart';
 
-import '../blocs/create_category_bloc/create_category_bloc.dart';
+import '../blocs/categories_bloc/bloc/categories_bloc.dart';
 
 Future getCategoryCreation(BuildContext context) {
   List<String> myCategoriesIcons = [
@@ -32,7 +32,7 @@ Future getCategoryCreation(BuildContext context) {
         ExpCategory category = ExpCategory.empty('');
 
         return BlocProvider.value(
-          value: context.read<CreateCategoryBloc>(),
+          value: context.read<CategoriesBloc>(),
           child: StatefulBuilder(builder: (ctx, setState) {
             return BlocListener<CreateCategoryBloc, CreateCategoryState>(
               listener: (context, state) {
