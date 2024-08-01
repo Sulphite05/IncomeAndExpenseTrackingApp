@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:income_repository/income_repository.dart';
 import 'package:smart_ghr_wali/screens/incomes/stats/stats.dart';
-import 'add_income/blocs/create_icategory_bloc/create_icategory_bloc.dart';
-import 'add_income/blocs/create_income_bloc/create_income_bloc.dart';
 import 'add_income/blocs/icategories_bloc/bloc/icategories_bloc.dart';
 import 'add_income/views/add_income.dart';
 import 'add_income/blocs/incomes_bloc/incomes_bloc.dart';
@@ -71,7 +69,7 @@ class _IncomeHomeScreenState extends State<IncomeHomeScreen> {
                       builder: (BuildContext context) => MultiBlocProvider(
                         providers: [
                           BlocProvider(
-                            create: (context) => CreateIncCategoryBloc(
+                            create: (context) => IncCategoriesBloc(
                                 incomeRepository: context
                                     .read<IncomesBloc>()
                                     .incomeRepository),
@@ -84,7 +82,7 @@ class _IncomeHomeScreenState extends State<IncomeHomeScreen> {
                               ..add(GetIncCategories()),
                           ),
                           BlocProvider(
-                            create: (context) => CreateIncomeBloc(
+                            create: (context) => IncomesBloc(
                                 incomeRepository: context
                                     .read<IncomesBloc>()
                                     .incomeRepository),

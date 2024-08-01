@@ -6,8 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:income_repository/income_repository.dart';
 import 'package:uuid/uuid.dart';
-
-import '../blocs/create_icategory_bloc/create_icategory_bloc.dart';
+import '../blocs/icategories_bloc/bloc/icategories_bloc.dart';
 
 Future getCategoryCreation(BuildContext context) {
   List<String> myCategoriesIcons = [
@@ -38,24 +37,24 @@ Future getCategoryCreation(BuildContext context) {
         IncCategory category = IncCategory.empty('');
 
         return BlocProvider.value(
-          value: context.read<CreateIncCategoryBloc>(),
+          value: context.read<IncCategoriesBloc>(),
           child: StatefulBuilder(builder: (ctx, setState) {
-            return BlocListener<CreateIncCategoryBloc, CreateIncCategoryState>(
+            return BlocListener<IncCategoriesBloc, IncCategoriesState>(
               listener: (context, state) {
-                if (state is CreateIncCategorySuccess) {
+                if (state.status == IncCategoriesOverviewStatus.success) {
                   Navigator.pop(ctx);
-                } else if (state is CreateIncCategoryLoading) {
+                } else if (state.status == IncCategoriesOverviewStatus.loading) {
                   setState(() {
                     isLoading = true;
                   });
-                } else if (state is CreateIncCategoryFailure) {
+                } else if (state.status == IncCategoriesOverviewStatus.failure) {
                   setState(() {
                     isLoading = false; // Hide loading indicator
                   });
                   // Show an error message
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed to create income ${state.error}'),
+                    const SnackBar(
+                      content: Text('Failed to create income'),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -245,7 +244,7 @@ Future getCategoryCreation(BuildContext context) {
                                           color: categoryColor.value);
                                     });
                                     context
-                                        .read<CreateIncCategoryBloc>()
+                                        .read<IncCategoriesBloc>()
                                         .add(CreateIncCategory(category));
                                     // Navigator.of(context).pop();
                                   },

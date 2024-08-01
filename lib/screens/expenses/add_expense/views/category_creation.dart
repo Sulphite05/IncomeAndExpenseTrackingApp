@@ -34,22 +34,22 @@ Future getCategoryCreation(BuildContext context) {
         return BlocProvider.value(
           value: context.read<CategoriesBloc>(),
           child: StatefulBuilder(builder: (ctx, setState) {
-            return BlocListener<CreateCategoryBloc, CreateCategoryState>(
+            return BlocListener<CategoriesBloc, CategoriesState>(
               listener: (context, state) {
-                if (state is CreateCategorySuccess) {
+                if (state.status == CategoriesOverviewStatus.success) {
                   Navigator.pop(ctx);
-                } else if (state is CreateCategoryLoading) {
+                } else if (state.status == CategoriesOverviewStatus.loading) {
                   setState(() {
                     isLoading = true;
                   });
-                } else if (state is CreateCategoryFailure) {
+                } else if (state.status == CategoriesOverviewStatus.failure) {
                   setState(() {
                     isLoading = false; // Hide loading indicator
                   });
                   // Show an error message
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed to create expense ${state.error}'),
+                    const SnackBar(
+                      content: Text('Failed to create expense'),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -239,7 +239,7 @@ Future getCategoryCreation(BuildContext context) {
                                           color: categoryColor.value);
                                     });
                                     context
-                                        .read<CreateCategoryBloc>()
+                                        .read<CategoriesBloc>()
                                         .add(CreateCategory(category));
                                     // Navigator.of(context).pop();
                                   },

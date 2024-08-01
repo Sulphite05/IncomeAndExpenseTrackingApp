@@ -7,9 +7,9 @@ import 'package:intl/intl.dart';
 
 import 'package:uuid/uuid.dart';
 
-import '../../../expenses/add_expense/views/category_creation.dart';
 import '../blocs/icategories_bloc/bloc/icategories_bloc.dart';
 import '../blocs/incomes_bloc/incomes_bloc.dart';
+import 'category_creation.dart';
 
 class AddIncome extends StatefulWidget {
   const AddIncome({super.key});

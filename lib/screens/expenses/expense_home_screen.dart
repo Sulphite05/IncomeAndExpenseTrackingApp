@@ -5,8 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'add_expense/stats/stats.dart';
-import 'add_expense/blocs/create_category_bloc/create_category_bloc.dart';
-import 'add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
 import 'add_expense/blocs/categories_bloc/bloc/categories_bloc.dart';
 import 'add_expense/views/add_expense.dart';
 import 'add_expense/blocs/expenses_bloc/expenses_bloc.dart';
@@ -71,7 +69,7 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                       builder: (BuildContext context) => MultiBlocProvider(
                         providers: [
                           BlocProvider(
-                            create: (context) => CreateCategoryBloc(
+                            create: (context) => CategoriesBloc(
                                 expenseRepository: context
                                     .read<ExpensesBloc>()
                                     .expenseRepository),
@@ -84,7 +82,7 @@ class _ExpenseHomeScreenState extends State<ExpenseHomeScreen> {
                               ..add(GetCategories()),
                           ),
                           BlocProvider(
-                            create: (context) => CreateExpenseBloc(
+                            create: (context) => ExpensesBloc(
                                 expenseRepository: context
                                     .read<ExpensesBloc>()
                                     .expenseRepository),
